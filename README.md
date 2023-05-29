@@ -15,6 +15,10 @@ A CLI for generating a Next.js app with Rails like features. Currently all optio
 ✅ = Implemented
 ❌ = Not Implemented (Yet)
 
+The lofty goal of this would be to generate scaffold for Next.js pages & api routes, models (typescript interfaces), migrations, seeds, and tests.
+
+There are some ESLint & Prettier configurations built in that are opinionated. These may be configurable in the future.
+
 ## Installation
 
 ```bash
@@ -44,7 +48,7 @@ next-rails new [options] <app-name>
 Creates a new Next.js app using the [create-next-app](https://www.npmjs.com/package/create-next-app) package with some default options. Currently the following options are set:
 
 ```bash
-create-next-app --ts --eslint --use-npm --src-dir --import-alias "@deps/*" --tailwind
+create-next-app --ts --eslint --no-app --use-npm --src-dir --import-alias "@deps/*" --tailwind
 ```
 
 ### `generate` ❌
