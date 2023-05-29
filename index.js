@@ -4,6 +4,7 @@ const { hideBin } = require('yargs/helpers');
 const initNextApp = require('./next/init-next-app');
 const migrations = require('./knex/migrations');
 const seeds = require('./knex/seeds');
+const { generateScaffold, generateModel } = require('./generate');
 // TODO: require generate-model and generate-scaffold when they're ready
 // const generateModel = require('./generate-model');
 // const generateScaffold = require('./generate-scaffold');
@@ -32,7 +33,7 @@ yargs(hideBin(process.argv))
     }
   )
   .command(
-    ['generate [type] [name]', 'g [type] [name]'],
+    ['generate [type] [name] [options...]', 'g [type] [name] [options...]'],
     'generate a model or scaffold',
     (yargs) => {
       yargs
@@ -43,18 +44,23 @@ yargs(hideBin(process.argv))
         .positional('name', {
           describe: 'name of the model or scaffold',
           type: 'string',
-        });
+        })
+        .array('options')
+        .describe('options', 'options for the model or scaffold');
     },
     (argv) => {
-      switch (argv.type) {
+      const { type, name, options } = argv;
+      switch (type) {
         case 'model':
-          console.log(`Generating model ${argv.name}...`);
+          console.log(`Generating model ${name}...`);
+          generateModel(name, options);
           break;
         case 'scaffold':
-          console.log(`Generating scaffold ${argv.name}...`);
+          console.log(`Generating scaffold ${name}...`);
+          generateScaffold(name, options);
           break;
         default:
-          console.log(`Unknown type ${argv.type}`);
+          console.log(`Unknown type ${type}`);
           break;
       }
     }
