@@ -1,7 +1,7 @@
 {
   "name": "next-rails",
-  "version": "1.0.4",
-  "description": "CLI for creating a next app with sequelize in a manner similar to the Rails CLI",
+  "version": "1.0.6",
+  "description": "CLI for creating a next app with knex in a manner similar to the Rails CLI",
   "main": "index.js",
   "scripts": {
     "test": "jest"

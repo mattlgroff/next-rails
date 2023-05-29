@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const pluralize = require('pluralize');
+const generateIndexPage = require('./views/indexPage');
 
 // Mapping from generate option types to TypeScript types
 const typeMapping = {
@@ -13,11 +14,26 @@ const typeMapping = {
 };
 
 function generateModelCode(singularModelName, options) {
-  // Begin constructing the model interface string
-  let modelInterface = `export interface ${singularModelName.charAt(0).toUpperCase() + singularModelName.slice(1)} {\n`;
+  // Helper function to convert snake_case to Title Case
+  function toTitleCase(str) {
+    return str.replace('_', ' ').replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+  }
+
+  const modelName = singularModelName.charAt(0).toUpperCase() + singularModelName.slice(1);
+
+  // Construct the model interface string
+  let modelInterface = `export interface ${modelName} {\n`;
   modelInterface += '  id: string;\n'; // UUID
 
-  // Add each option as a property on the interface
+  // Construct the model metadata interface string
+  let modelMetadataInterface = `export interface ${modelName}Metadata {\n`;
+  modelMetadataInterface += `  id: { label: string; display: (value: string) => string; };\n`;
+
+  // Construct the model metadata object string
+  let modelMetadataObject = `export const ${singularModelName}Metadata: ${modelName}Metadata = {\n`;
+  modelMetadataObject += `  id: { label: 'ID', display: (value: string) => value },\n`;
+
+  // Add each option as a property on the interfaces and a field in the metadata object
   options.forEach((option) => {
     const [name, type] = option.split(':');
     const tsType = typeMapping[type];
@@ -25,15 +41,29 @@ function generateModelCode(singularModelName, options) {
       throw new Error(`Unknown type '${type}' for option '${option}'`);
     }
     modelInterface += `  ${name}: ${tsType};\n`;
+
+    const label = toTitleCase(name);
+    const displayType = type === 'boolean' ? '(value: boolean) => string' : '(value: string) => string';
+    modelMetadataInterface += `  ${name}: { label: string; display: ${displayType}; };\n`;
+
+    const displayFunction = type === 'boolean' ? '(value: boolean) => value ? "Yes" : "No"' : '(value: string) => value';
+    modelMetadataObject += `  ${name}: { label: '${label}', display: ${displayFunction} },\n`;
   });
 
   // Add created_at and updated_at properties
   modelInterface += '  created_at: Date;\n';
   modelInterface += '  updated_at: Date;\n';
+  modelMetadataInterface += '  created_at: { label: string; display: (value: Date) => string; };\n';
+  modelMetadataInterface += '  updated_at: { label: string; display: (value: Date) => string; };\n';
+
+  modelMetadataObject += `  created_at: { label: 'Created At', display: (value: Date) => value?.toLocaleString() || "" },\n`;
+  modelMetadataObject += `  updated_at: { label: 'Updated At', display: (value: Date) => value?.toLocaleString() || "" },\n`;
 
   modelInterface += '}';
+  modelMetadataInterface += '}';
+  modelMetadataObject += '};\n';
 
-  return modelInterface;
+  return modelInterface + '\n\n' + modelMetadataInterface + '\n\n' + modelMetadataObject;
 }
 
 function generateApiCode(singularModelName, pluralModelName) {
@@ -133,6 +163,12 @@ exports.down = function (knex, Promise) {
   return migration;
 }
 
+function generateViewCode(singularModelName, pluralModelName, options) {
+  // Generate index page (src/pages/${pluralModelName}/index.tsx)
+  const indexPath = path.join(process.cwd(), 'src/pages', pluralModelName, 'index.tsx');
+  writeStringToFile(generateIndexPage(singularModelName, pluralModelName, options), indexPath);
+}
+
 function writeStringToFile(string, filePath) {
   // Create the directory if it doesn't exist
   const dir = path.dirname(filePath);
@@ -150,7 +186,7 @@ function generateCurrentTimestamp() {
   const timestamp = new Date()
     .toISOString()
     .replace(/[-:.T]/g, '')
-    .split('.')[0]; // Current timestamp in the format YYYYMMDDHHMMSS
+    .slice(0, -4); // Current timestamp in the format YYYYMMDDHHMMSS
   return timestamp;
 }
 
@@ -161,7 +197,7 @@ function generateModel(modelName, options) {
   const modelPath = path.join(
     process.cwd(),
     'src/db/models',
-    `${singularModelName.charAt(0).toUpperCase() + singularModelName.slice(1)}.ts`
+    `${singularModelName}.ts`
   );
   writeStringToFile(generateModelCode(singularModelName, options), modelPath);
 }
@@ -181,6 +217,9 @@ function generateScaffold(modelName, options) {
   const timestamp = generateCurrentTimestamp(); // Current timestamp in the format YYYYMMDDHHMMSS
   const migrationPath = path.join(process.cwd(), 'src/db/migrations', `${timestamp}_create_${pluralModelName}.js`);
   writeStringToFile(generateMigrationCode(pluralModelName, options), migrationPath);
+
+  // Generate views
+  generateViewCode(singularModelName, pluralModelName, options);
 }
 
 module.exports = {
@@ -189,4 +228,6 @@ module.exports = {
   generateApiCode,
   generateModelCode,
   generateMigrationCode,
+  generateViewCode,
+  generateCurrentTimestamp,
 };

@@ -53,43 +53,49 @@ create-next-app --ts --eslint --no-app --use-npm --src-dir --import-alias "@deps
 
 ### `generate` ❌
 
-#### `next-rails generate model <model-name> [options]`
+#### `next-rails generate model <model-name> [options]` ✅
 
 ```bash
 next-rails generate model <model-name> [options]
 ```
 
-Generates a new model with the given name. The model will be created in the `models` folder and will be imported into the `db` file. The model will be created with the following default fields:
+Generates a new TypeScript interface representing a model with the given name and options. Note that for the model name, the singular form should be provided (ex: "Post" or "Todo"). This model interface will be created in the src/db/models directory. Each option should be a string in the format 'name:type'. The following types are currently supported:
 
-- `id` - `DataTypes.UUID` - `primaryKey: true`
-- `createdAt` - `DataTypes.DATE`
-- `updatedAt` - `DataTypes.DATE`
+- string
+- integer
+- boolean
+- date
+- text
 
-#### `next-rails generate scaffold <model-name> [options]` ❌
+The model interface will be created with the following default fields in addition to the fields specified by the options:
+
+- id - string - Represents a UUID.
+- createdAt - Date - Represents the timestamp when the record was created.
+- updatedAt - Date - Represents the timestamp when the record was last updated.
+
+#### `next-rails generate scaffold <model-name> [options]` 
 
 ```bash
 next-rails generate scaffold <controller-name> [options]
 ```
 
-Generates a new model with the given name. The model will be created in the `models` folder and will be imported into the `db` file. The model will be created with the following default fields:
+Executes the same operations as the model command described above, and additionally generates the following:
 
-- `id` - `DataTypes.UUID` - `primaryKey: true`
-- `createdAt` - `DataTypes.DATE`
-- `updatedAt` - `DataTypes.DATE`
+1) An API controller for the model in the pages/api directory. This controller handles CRUD operations (Create, Read, Update, Delete) for the model. The routes are as follows: 
+* GET /api/<plural-model-name> - Returns all records.
+* GET /api/<plural-model-name>/:id - Returns a single record.
+* POST /api/<plural-model-name> - Creates a new record.
+* PUT or PATCH /api/<plural-model-name>/:id - Updates a record.
+* DELETE /api/<plural-model-name>/:id - Deletes a record.
 
-Generates CRUD routes for the model in the `pages/api` folder.
-GET `/api/<model-name>` - Returns all items.
-GET `/api/<model-name>/:id` - Returns a single item.
-POST `/api/<model-name>` - Creates a new item.
-PUT `/api/<model-name>/:id` - Updates a item.
-DELETE `/api/<model-name>/:id` - Deletes a item.
+2) A Knex.js migration script in the src/db/migrations directory. This script includes functions to create and drop a database table representing the model. The table will include columns for each field in the model interface, as well as columns for createdAt and updatedAt.
+Note that for the model name, the singular form should be provided (ex: "Post" or "Todo"), and the scaffold generator will use a plural form where appropriate. For example, if you generate a scaffold for 'post', the model will be named 'Post', the API controller will be at pages/api/posts.ts, and the migration script will create a table named 'posts'. 
 
-Generates CRUD pages for the model in the `pages/<model-name>` folder.
-
-- `pages/<model-name>/index.tsx` - Displays a list of items.
-- `pages/<model-name>/[id].tsx` - Displays a single item.
-- `pages/<model-name>/new.tsx` - Displays a form to create a new item.
-- `pages/<model-name>/[id]/edit.tsx` - Displays a form to update a item.
+3) Pages for the model in the pages directory. The following pages will be created: ❌
+* /<plural-model-name> - A page that lists all records.
+* /<plural-model-name>/:id - A page that displays a single record.
+* /<plural-model-name>/new - A page that allows you to create a new record.
+* /<plural-model-name>/:id/edit - A page that allows you to edit a record.
 
 ### `migration:generate` ✅
 
