@@ -1,6 +1,6 @@
 # Next Rails CLI
 
-A CLI for generating a Next.js app with Rails like features. Currently all options are opinionated and there is no way to customize the options. This may change in the future.
+A CLI for generating a Next.js app with Rails CLI-like features. 
 
 - Next.js 13.14.4 ✅
 - TypeScript ✅

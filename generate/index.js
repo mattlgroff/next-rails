@@ -1,7 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const pluralize = require('pluralize');
-const generateIndexPage = require('./views/indexPage');
+const generateIndexPage = require('./views/generateIndexPage');
+const { execSync } = require('child_process');
 
 // Mapping from generate option types to TypeScript types
 const typeMapping = {
@@ -173,12 +174,16 @@ function writeStringToFile(string, filePath) {
   // Create the directory if it doesn't exist
   const dir = path.dirname(filePath);
   if (!fs.existsSync(dir)) {
+    console.log('📁 Creating directory...');
     fs.mkdirSync(dir, { recursive: true });
   }
 
   fs.writeFile(filePath, string, (err) => {
     if (err) throw err;
-    console.log(`File ${filePath} written successfully`);
+    console.log(`✅ File ${filePath} written successfully`);
+
+    // Prettier formatting
+    execSync('npx --no-install prettier --write ./src');
   });
 }
 
@@ -194,11 +199,7 @@ function generateModel(modelName, options) {
   const singularModelName = modelName.toLowerCase();
 
   // Generate model (src/db/models/${singularModelName}.ts) - Has the Typescript interface for the model
-  const modelPath = path.join(
-    process.cwd(),
-    'src/db/models',
-    `${singularModelName}.ts`
-  );
+  const modelPath = path.join(process.cwd(), 'src/db/models', `${singularModelName}.ts`);
   writeStringToFile(generateModelCode(singularModelName, options), modelPath);
 }
 

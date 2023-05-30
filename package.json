@@ -1,6 +1,6 @@
 {
   "name": "next-rails",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "CLI for creating a next app with knex in a manner similar to the Rails CLI",
   "main": "index.js",
   "scripts": {
@@ -9,12 +9,12 @@
   "bin": {
     "next-rails": "./index.js"
   },
-  "author": "",
+  "author": "Matthew Groff <mattlgroff@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "create-next-app": "13.4.4",
     "knex": "2.4.2",
-    "pluralize": "^8.0.0",
+    "pluralize": "8.0.0",
     "yargs": "17.7.2"
   },
   "repository": {
@@ -22,6 +22,6 @@
     "url": "https://github.com/mattlgroff/next-rails"
   },
   "devDependencies": {
-    "jest": "^29.5.0"
+    "jest": "29.5.0"
   }
 }

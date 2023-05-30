@@ -18,7 +18,20 @@ function generateIndexPage(singularModelName, pluralModelName, options) {
   options.forEach((option) => {
     const [name, type] = option.split(':');
     const label = toTitleCase(name);
-    const displayFunction = type === 'boolean' ? (value) => (value ? 'Yes' : 'No') : (value) => value;
+    let displayFunction;
+
+    switch (type) {
+      case 'boolean':
+        displayFunction = (value) => (value ? 'Yes' : 'No');
+        break;
+      case 'date':
+        displayFunction = (value) => (value ? value.toISOString() : '');
+        break;
+      default:
+        displayFunction = (value) => value;
+        break;
+    }
+
     modelMetadata[name] = { label: label, display: displayFunction };
   });
 
@@ -28,9 +41,9 @@ function generateIndexPage(singularModelName, pluralModelName, options) {
   const tdJsx = fields
     .map(
       (field) => `
-  <td className="whitespace-nowrap px-3 py-4 text-sm font-medium text-gray-900">
-    {${singularModelName}.${field} !== null && typeof ${singularModelName}.${field} !== 'undefined' ? modelMetadata['${field}'].display(${singularModelName}.${field}) : ""}
-  </td>
+<td className="whitespace-nowrap px-3 py-4 text-sm font-medium text-gray-900">
+  {${singularModelName}.${field} !== null && typeof ${singularModelName}.${field} !== 'undefined' ? modelMetadata['${field}'].display(${singularModelName}.${field}) : ""}
+</td>
 `
     )
     .join('');
@@ -41,7 +54,7 @@ const fieldData = ${pluralModelName}.map(${singularModelName} => (
     ${tdJsx}
     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-right">
       <Link href="/${pluralModelName}/{${singularModelName}.id}">
-        <i aria-hidden className="fa fa-eye fa-lg px-1 hover:text-blue-600 " />
+        Show
       </Link>
     </td>
   </tr>
