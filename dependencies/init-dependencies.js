@@ -11,7 +11,7 @@ const initDependencies = (appPath) => {
 
   // Install Prettier, ESLint, Lint Staged, and Husky packages.
   const installDevCommand =
-    'npm install --save-dev prettier prettier-plugin-tailwindcss eslint-config-prettier eslint-plugin-prettier @types/pg';
+    'npm install --save-dev prettier prettier-plugin-tailwindcss eslint-config-prettier eslint-plugin-prettier @types/pg @typescript-eslint/eslint-plugin';
   execSync(installDevCommand, { cwd: appPath, stdio: 'inherit' });
 
   // TODO: Add husky and lint-staged and configure them as well
