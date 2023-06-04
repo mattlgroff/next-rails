@@ -11,6 +11,7 @@ const typeMapping = {
   boolean: 'boolean',
   date: 'Date',
   text: 'string',
+  vector: 'number[]',
   // TODO: Add other type mappings as needed
 };
 
@@ -132,8 +133,8 @@ function generateApiCode(singularModelName, pluralModelName) {
 function generateMigrationCode(pluralModelName, options) {
   // Begin constructing the migration file string
   let migration = `exports.up = function (knex, Promise) {
-  return knex.schema.raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"').createTable('${pluralModelName}', function (table) {
-    table.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()'));\n`;
+    return knex.schema.raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"; CREATE EXTENSION IF NOT EXISTS "vector";').createTable('${pluralModelName}', function (table) {
+      table.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()'));\n`;  
 
   // Add each option as a column in the table
   options.forEach((option) => {
@@ -146,6 +147,8 @@ function generateMigrationCode(pluralModelName, options) {
     // Include special handling for boolean with defaultTo(false)
     if (type === 'boolean') {
       migration += `    table.${migrationType}('${name}').defaultTo(false);\n`;
+    } else if (type === 'vector') { // special case for 'vector'
+      migration += `    table.specificType('${name}', 'vector(1536)');\n`;
     } else {
       migration += `    table.${migrationType}('${name}').notNullable();\n`;
     }
@@ -163,6 +166,7 @@ exports.down = function (knex, Promise) {
 
   return migration;
 }
+
 
 function generateViewCode(singularModelName, pluralModelName, options) {
   // Generate index page (src/pages/${pluralModelName}/index.tsx)

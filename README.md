@@ -7,8 +7,9 @@ A CLI for generating a Next.js app with Rails CLI-like features.
 - ESLint ✅
 - Tailwind CSS ✅
 - Knex ✅
-- PostgreSQL ✅
+- PostgreSQL w/ PgVector ✅
 - Prettier ✅
+- Dockerfile for Development ✅
 - Husky ❌
 - Lint Staged ❌
 
@@ -66,6 +67,7 @@ Generates a new TypeScript interface representing a model with the given name an
 - boolean
 - date
 - text
+- vector
 
 The model interface will be created with the following default fields in addition to the fields specified by the options:
 

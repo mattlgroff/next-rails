@@ -1,0 +1,16 @@
+FROM postgres
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        build-essential \
+        git \
+        postgresql-server-dev-all \
+        libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install pgvector, in case we want to use it
+ENV GIT_SSL_NO_VERIFY=true
+RUN git clone --branch v0.4.2 https://github.com/pgvector/pgvector.git \
+    && cd pgvector \
+    && make \
+    && make install

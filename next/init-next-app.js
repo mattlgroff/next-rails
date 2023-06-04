@@ -28,6 +28,30 @@ const initNextApp = (appDir) => {
   const destReadmePath = join(appPath, 'README.md');
   copyFileSync(srcReadmePath, destReadmePath);
 
+  // Copy docker-compose.yml
+  console.log('Copying over docker-compose.yml...');
+  const srcDockerComposePath = resolve(__dirname, './files-to-copy/docker-compose.yml');
+  const destDockerComposePath = join(appPath, 'docker-compose.yml');
+  copyFileSync(srcDockerComposePath, destDockerComposePath);
+
+  // Copy Dockerfile.nextjs
+  console.log('Copying over Dockerfile.nextjs...');
+  const srcDockerfileNextjsPath = resolve(__dirname, './files-to-copy/Dockerfile.nextjs');
+  const destDockerfileNextjsPath = join(appPath, 'Dockerfile.nextjs');
+  copyFileSync(srcDockerfileNextjsPath, destDockerfileNextjsPath);
+
+  // Copy Dockerfile.postgres
+  console.log('Copying over Dockerfile.postgres...');
+  const srcDockerfilePostgresPath = resolve(__dirname, './files-to-copy/Dockerfile.postgres');
+  const destDockerfilePostgresPath = join(appPath, 'Dockerfile.postgres');
+  copyFileSync(srcDockerfilePostgresPath, destDockerfilePostgresPath);
+
+  // Copy env.local to .env.local
+  console.log('Copying over and renaming env.local to .env.local...');
+  const srcEnvLocalPath = resolve(__dirname, './files-to-copy/env.local');
+  const destEnvLocalPath = join(appPath, '.env.local');
+  copyFileSync(srcEnvLocalPath, destEnvLocalPath);
+
   // After Next.js app creation and copying README.md, initialize additional dependencies (Sequelize, Prettier, etc).
   initDependencies(appPath);
 };

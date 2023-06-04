@@ -35,15 +35,16 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 # Next Rails CLI
 
-A CLI for generating a Next.js app with Rails like features. Currently all options are opinionated and there is no way to customize the options. This may change in the future.
+A CLI for generating a Next.js app with Rails CLI-like features. 
 
 - Next.js 13.14.4 ✅
 - TypeScript ✅
 - ESLint ✅
 - Tailwind CSS ✅
 - Knex ✅
-- PostgreSQL ✅
+- PostgreSQL w/ PgVector ✅
 - Prettier ✅
+- Dockerfile for Development ✅
 - Husky ❌
 - Lint Staged ❌
 
@@ -101,6 +102,7 @@ Generates a new TypeScript interface representing a model with the given name an
 - boolean
 - date
 - text
+- vector
 
 The model interface will be created with the following default fields in addition to the fields specified by the options:
 

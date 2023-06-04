@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  nextjs:
+    container_name: next-rails-nextjs
+    build:
+      context: .
+      dockerfile: Dockerfile.nextjs
+    depends_on:
+      - postgres
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./:/app
+      - ./node_modules:/app/node_modules
+    env_file: ./.env.local
+    environment:
+      DATABASE_URL: postgres://postgres:mysecretpassword@postgres:5432/next-rails
+
+  # We're using the 'postgres' image but we're also including the pgvector extension (see Dockerfile.postgres for more details)
+  postgres:
+    container_name: next-rails-postgres
+    build:
+      context: .
+      dockerfile: Dockerfile.postgres
+    environment:
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_DB: next-rails
+    ports:
+      - 5432:5432
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+volumes:
+  pg_data:
