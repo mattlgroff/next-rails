@@ -1,5 +1,9 @@
 # Next Rails CLI
 
+<a href="https://www.npmjs.com/package/next-rails" target="\_parent">
+  <img alt="" src="https://img.shields.io/npm/dm/next-rails.svg" />
+</a>
+
 A CLI for generating a Next.js app with Rails CLI-like features. 
 
 - Next.js 13.14.4 ✅
