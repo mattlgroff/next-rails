@@ -121,20 +121,20 @@ next-rails generate scaffold <controller-name> [options]
 Executes the same operations as the model command described above, and additionally generates the following:
 
 1) An API controller for the model in the pages/api directory. This controller handles CRUD operations (Create, Read, Update, Delete) for the model. The routes are as follows: 
-* GET /api/<plural-model-name>/index - Returns all records.
-* GET /api/<plural-model-name>/show/:id - Returns a single record.
-* POST /api/<plural-model-name>/create - Creates a new record.
-* PUT /api/<plural-model-name>/update/:id - Updates a record.
-* DELETE /api/<plural-model-name>/destroy/:id - Deletes a record.
+* GET /api/plural-model-name/index - Returns all records.
+* GET /api/plural-model-name/show/:id - Returns a single record.
+* POST /api/plural-model-name/create - Creates a new record.
+* PUT /api/plural-model-name/update/:id - Updates a record.
+* DELETE /api/plural-model-name/destroy/:id - Deletes a record.
 
 2) A Knex.js migration script in the src/db/migrations directory. This script includes functions to create and drop a database table representing the model. The table will include columns for each field in the model interface, as well as columns for createdAt and updatedAt.
 Note that for the model name, the singular form should be provided (ex: "Post" or "Todo"), and the scaffold generator will use a plural form where appropriate. For example, if you generate a scaffold for 'post', the model will be named 'Post', the API controller will be at pages/api/posts.ts, and the migration script will create a table named 'posts'. 
 
 3) Pages for the model in the pages directory. The following pages will be created: 
-* /<plural-model-name> - A page that lists all records. (Index) ✅
-* /<plural-model-name>/:id/index - A page that displays a single record. (Show) (Delete) ✅
-* /<plural-model-name>/new - A page that allows you to create a new record. (Create) ❌
-* /<plural-model-name>/:id/edit - A page that allows you to edit a record. (Update) ❌
+* /plural-model-name/index.tsx - A page that lists all records. (Index) ✅
+* /plural-model-name/:id/index.tsx - A page that displays a single record. (Show) (Delete) ✅
+* /plural-model-name/new.tsx - A page that allows you to create a new record. (Create) ❌
+* /plural-model-name/:id/edit - A page that allows you to edit a record. (Update) ❌
 
 ### `migration:generate` ✅
 
