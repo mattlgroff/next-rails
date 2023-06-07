@@ -13,7 +13,7 @@
   "license": "MIT",
   "dependencies": {
     "create-next-app": "13.4.4",
-    "ejs": "^3.1.9",
+    "ejs": "3.1.9",
     "knex": "2.4.2",
     "pluralize": "8.0.0",
     "yargs": "17.7.2"
