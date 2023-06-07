@@ -1,7 +1,7 @@
 const ejs = require('ejs');
 const path = require('path');
 
-async function generateApiCode(singularModelName, pluralModelName) {
+async function generateCreateControllerCode(singularModelName, pluralModelName) {
   const data = {
     singularModelName,
     pluralModelName,
@@ -10,7 +10,7 @@ async function generateApiCode(singularModelName, pluralModelName) {
 
   return new Promise((resolve, reject) => {
     ejs.renderFile(
-      path.resolve(__dirname, './templates/apiCode.ejs'),
+      path.resolve(__dirname, './templates/api/create.ejs'),
       data,
       {},
       function (err, str) {
@@ -21,4 +21,91 @@ async function generateApiCode(singularModelName, pluralModelName) {
   });
 }
 
-module.exports = generateApiCode;
+async function generateUpdateControllerCode(singularModelName, pluralModelName) {
+  const data = {
+    singularModelName,
+    pluralModelName,
+    capitalizedSingularModelName: singularModelName.charAt(0).toUpperCase() + singularModelName.slice(1),
+  };
+
+  return new Promise((resolve, reject) => {
+    ejs.renderFile(
+      path.resolve(__dirname, './templates/api/update.ejs'),
+      data,
+      {},
+      function (err, str) {
+        if (err) reject(err);
+        resolve(str);
+      }
+    );
+  });
+}
+
+async function generateDestroyControllerCode(singularModelName, pluralModelName) {
+  const data = {
+    singularModelName,
+    pluralModelName,
+    capitalizedSingularModelName: singularModelName.charAt(0).toUpperCase() + singularModelName.slice(1),
+  };
+
+  return new Promise((resolve, reject) => {
+    ejs.renderFile(
+      path.resolve(__dirname, './templates/api/destroy.ejs'),
+      data,
+      {},
+      function (err, str) {
+        if (err) reject(err);
+        resolve(str);
+      }
+    );
+  });
+}
+
+async function generateShowControllerCode(singularModelName, pluralModelName) {
+  const data = {
+    singularModelName,
+    pluralModelName,
+    capitalizedSingularModelName: singularModelName.charAt(0).toUpperCase() + singularModelName.slice(1),
+  };
+
+  return new Promise((resolve, reject) => {
+    ejs.renderFile(
+      path.resolve(__dirname, './templates/api/show.ejs'),
+      data,
+      {},
+      function (err, str) {
+        if (err) reject(err);
+        resolve(str);
+      }
+    );
+  });
+}
+
+async function generateIndexControllerCode(singularModelName, pluralModelName) {
+  const data = {
+    singularModelName,
+    pluralModelName,
+    capitalizedSingularModelName: singularModelName.charAt(0).toUpperCase() + singularModelName.slice(1),
+  };
+
+  return new Promise((resolve, reject) => {
+    ejs.renderFile(
+      path.resolve(__dirname, './templates/api/index.ejs'),
+      data,
+      {},
+      function (err, str) {
+        if (err) reject(err);
+        resolve(str);
+      }
+    );
+  });
+}
+
+
+module.exports = {
+  generateCreateControllerCode,
+  generateUpdateControllerCode,
+  generateDestroyControllerCode,
+  generateShowControllerCode,
+  generateIndexControllerCode,
+}

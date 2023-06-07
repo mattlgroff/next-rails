@@ -1,0 +1,80 @@
+import { GetServerSideProps } from "next";
+import { <%= modelName %>, <%= singularModelName %>Metadata as modelMetadata } from "@deps/db/models/<%= singularModelName %>";
+import Link from "next/link";
+import { getKnex } from "@deps/db";
+import { useRouter } from 'next/router';
+
+interface Show<%= PascalSingularModelName %>PageProps {
+  <%= singularModelName %>: <%= modelName %>;
+}
+
+const Show<%= PascalSingularModelName %>Page = ({ <%= singularModelName %> }: Show<%= PascalSingularModelName %>PageProps) => {
+  const router = useRouter();
+
+  // Confirm deletion, then make request to delete endpoint
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this <%= singularModelName %>?');
+    if (confirmDelete) {
+      try {
+        const res = await fetch(`/api/<%= pluralModelName %>/destroy/${<%= singularModelName %>.id}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error('Delete failed');
+        alert('<%= modelName %> deleted successfully');
+        router.push('/<%= pluralModelName %>');
+      } catch (error) {
+        alert('An error occurred while deleting the <%= singularModelName %>.');
+      }
+    }
+  };
+
+  const fieldData = Object.keys(modelMetadata).map(field => (
+    <div key={field}>
+      <h3>{modelMetadata[field].label}</h3>
+      <p>{<%= singularModelName %>[field] !== null && typeof <%= singularModelName %>[field] !== 'undefined' ? modelMetadata[field].display(<%= singularModelName %>[field]) : ""}</p>
+    </div>
+  ));
+
+  return (
+    <div className="container mx-auto mt-6">
+      <Link href={`/<%= pluralModelName %>`} className="px-4 py-2 bg-blue-500 text-white rounded">
+        Back to <%= pluralModelName %>
+      </Link>
+      <h1 className="text-2xl font-bold">Show <%= modelName %></h1>
+      <div className="max-w-2xl mx-auto">
+        {fieldData}
+        <div className="mt-6 flex space-x-4">
+          <Link href={`/<%= pluralModelName %>/${<%= singularModelName %>.id}/edit`} className="px-4 py-2 bg-blue-500 text-white rounded">
+            Edit <%= modelName %>
+          </Link>
+          <button onClick={handleDelete} className="px-4 py-2 bg-red-500 text-white rounded">
+            Delete <%= modelName %>
+          </button>
+        </div>
+      </div>
+  </div>
+  );
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const knex = getKnex();
+  const <%= singularModelName %> = await knex('<%= pluralModelName %>').where('id', context.params?.id).first();
+
+  if (!<%= singularModelName %>) {
+    return {
+      notFound: true,
+    };
+  }
+
+  const serialized<%= modelName %> = {
+    ...<%= singularModelName %>,
+    created_at: <%= singularModelName %>.created_at?.toISOString(),
+    updated_at: <%= singularModelName %>.updated_at?.toISOString(),
+  };
+
+  return {
+    props: {
+      <%= singularModelName %>: serialized<%= modelName %>,
+    },
+  };
+};
+
+export default Show<%= PascalSingularModelName %>Page;

@@ -1,0 +1,28 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { getKnex } from '@deps/db';
+import { <%= capitalizedSingularModelName %> } from '@deps/db/models/<%= singularModelName %>';
+
+const knex = getKnex();
+
+type ResponseType = <%= capitalizedSingularModelName %> | { message: string };
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType>) {
+  // Check if request method is POST
+  if (req.method !== 'POST') {
+    return res.status(405).json({ message: 'Method not allowed. Use POST.' });
+  }
+
+  const new<%= capitalizedSingularModelName %>: <%= capitalizedSingularModelName %> = req.body;
+
+  try {
+    const [inserted<%= capitalizedSingularModelName %>] = await knex('<%= pluralModelName %>').insert(new<%= capitalizedSingularModelName %>).returning('*');
+
+    // Everything went well
+    return res.status(201).json(inserted<%= capitalizedSingularModelName %>);
+  } catch (error) {
+    console.error(error);
+
+    // Unexpected error
+    return res.status(500).json({ message: 'An unexpected error occurred.' });
+  }
+}
