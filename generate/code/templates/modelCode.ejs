@@ -1,0 +1,20 @@
+export interface <%- modelName %> {
+  id: string;
+  <% options.forEach((option) => { const [name, type] = option.split(':'); %><%- name %>: <%- typeMapping[type] %>;
+  <% }); %>created_at: Date;
+  updated_at: Date;
+}
+
+export interface <%- modelName %>Metadata {
+  id: { label: string; display: (value: string) => string; };
+  <% options.forEach((option) => { const [name, type] = option.split(':'); %><%- name %>: { label: string; display: <%- type === 'boolean' ? '(value: boolean) => string' : '(value: string) => string' %>; };
+  <% }); %>created_at: { label: string; display: (value: Date) => string; };
+  updated_at: { label: string; display: (value: Date) => string; };
+}
+
+export const <%- singularModelName %>Metadata: <%- modelName %>Metadata = {
+  id: { label: 'ID', display: (value: string) => value },
+  <% options.forEach((option) => { const [name, type] = option.split(':'); %><%- name %>: { label: '<%- toTitleCase(name) %>', display: <%- type === 'boolean' ? '(value: boolean) => value ? "Yes" : "No"' : '(value: string) => value' %> },
+  <% }); %>created_at: { label: 'Created At', display: (value: Date) => value?.toLocaleString() || "" },
+  updated_at: { label: 'Updated At', display: (value: Date) => value?.toLocaleString() || "" },
+};

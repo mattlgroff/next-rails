@@ -6,11 +6,11 @@ const formatString = (str) => {
 };
 
 describe('generateIndexPage', () => {
-  it('should generate index page for Todo model', () => {
+  it('should generate index page for Todo model', async () => {
     const singularModelName = 'todo';
     const pluralModelName = 'todos';
     const options = ['title:string', 'is_completed:boolean'];
-    const output = formatString(generateIndexPage(singularModelName, pluralModelName, options));
+    const output = formatString(await generateIndexPage(singularModelName, pluralModelName, options));
 
     const expectedOutputStart = `
     import { GetServerSideProps } from "next";
@@ -52,11 +52,11 @@ describe('generateIndexPage', () => {
     expect(output.endsWith(formatString(expectedOutputEnd))).toBe(true);
   });
 
-  it('should generate index page for User model', () => {
+  it('should generate index page for User model', async () => {
     const singularModelName = 'user';
     const pluralModelName = 'users';
     const options = ['name:string', 'email:string', 'is_active:boolean'];
-    const output = formatString(generateIndexPage(singularModelName, pluralModelName, options));
+    const output = formatString(await generateIndexPage(singularModelName, pluralModelName, options));
 
     const expectedOutputStart = `
     import { GetServerSideProps } from "next";

@@ -1,10 +1,10 @@
-const { generateModelCode } = require('../index');
+const generateModelCode = require('../generateModelCode');
 
 describe('generateModelCode', () => {
-  it('should generate correct model code for a user', () => {
+  it('should generate correct model code for a user', async () => {
     const singularModelName = 'user';
     const options = ['name:string', 'age:integer', 'isActive:boolean'];
-    const result = generateModelCode(singularModelName, options);
+    const result = await generateModelCode(singularModelName, options);
     const modelName = singularModelName.charAt(0).toUpperCase() + singularModelName.slice(1);
 
     expect(result).toContain(`export interface ${singularModelName.charAt(0).toUpperCase() + singularModelName.slice(1)} {`);
@@ -17,10 +17,10 @@ describe('generateModelCode', () => {
     expect(result).toContain(`export interface ${modelName}Metadata {`);
   });
 
-  it('should generate correct model code for a Todo', () => {
+  it('should generate correct model code for a Todo', async () => {
     const singularModelName = 'todo';
     const options = ['title:string', 'is_completed:boolean'];
-    const result = generateModelCode(singularModelName, options);
+    const result = await generateModelCode(singularModelName, options);
 
     const modelName = singularModelName.charAt(0).toUpperCase() + singularModelName.slice(1);
 

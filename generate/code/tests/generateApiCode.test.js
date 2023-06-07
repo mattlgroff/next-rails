@@ -1,11 +1,10 @@
-// tests/generateApiCode.test.js
-const { generateApiCode } = require('../index');
+const generateApiCode = require('../generateApiCode');
 
 describe('generateApiCode', () => {
-  it('should generate correct api code', () => {
+  it('should generate correct api code', async () => {
     const singularModelName = 'user';
     const pluralModelName = 'users';
-    const result = generateApiCode(singularModelName, pluralModelName);
+    const result = await generateApiCode(singularModelName, pluralModelName);
 
     // Expect we import the types and getKnex
     expect(result).toContain(
@@ -57,61 +56,3 @@ describe('generateApiCode', () => {
     expect(result).toContain(`res.status(405).end(\`Method \${method} Not Allowed\`);`);
   });
 });
-
-/* 
-We can do an assert for each HTTP Methods. We need to be thorough here.
-Expect that the generated code contains the following if the model name is Todo:
-
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { getKnex } from '@deps/db';
-import { Todo } from '@deps/db/models/Todo'; // Code-gen will make this file with this import for you
-
-const knex = getKnex();
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { method, query: { id } } = req;
-
-  switch (method) {
-    case 'GET': 
-      if (id) {
-        const todo = await knex('todos').where('id', id).first();
-        res.status(200).json(todo);
-      } else {
-        const todos = await knex('todos');
-        res.status(200).json(todos);
-      }
-      break;
-
-    case 'POST':
-      const newTodo = req.body as Todo;
-      const [insertedTodo] = await knex('todos').insert(newTodo).returning('*');
-      res.status(201).json(insertedTodo);
-      break;
-
-    case 'PUT':
-    case 'PATCH':
-      if (id) {
-        const updatedTodo = req.body as Partial<Todo>;
-        const [updatedEntry] = await knex('todos').where('id', id).update(updatedTodo).returning('*');
-        res.status(200).json(updatedEntry);
-      } else {
-        res.status(400).json({message: 'Missing ID'});
-      }
-      break;
-
-    case 'DELETE':
-      if (id) {
-        await knex('todos').where('id', id).del();
-        res.status(200).json({message: `Todo with id ${id} deleted`});
-      } else {
-        res.status(400).json({message: 'Missing ID'});
-      }
-      break;
-
-    default:
-      res.setHeader('Allow', ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']);
-      res.status(405).end(`Method ${method} Not Allowed`);
-  }
-}
-
-*/

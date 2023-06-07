@@ -1,0 +1,69 @@
+import { GetServerSideProps } from "next";
+import { <%= modelName %>, <%= singularModelName %>Metadata as modelMetadata } from "@deps/db/models/<%= singularModelName %>";
+import Link from "next/link";
+import { getKnex } from "@deps/db";
+
+interface <%= PascalPluralModelName %>PageProps {
+  <%= pluralModelName %>: <%= modelName %>[];
+}
+
+const <%= PascalPluralModelName %>Page = ({ <%= pluralModelName %> }: <%= PascalPluralModelName %>PageProps) => {
+  const fieldData = <%= pluralModelName %>.map(<%= singularModelName %> => (
+    <tr key={<%= singularModelName %>.id}>
+      <% fields.forEach(field => { %>
+        <td className="whitespace-nowrap px-3 py-4 text-sm font-medium text-gray-900">
+          {<%= singularModelName %>.<%= field %> !== null && typeof <%= singularModelName %>.<%= field %> !== 'undefined' ? modelMetadata['<%= field %>'].display(<%= singularModelName %>.<%= field %>) : ""}
+        </td>
+      <% }) %>
+      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-right">
+        <Link href="/<%= pluralModelName %>/{<%= singularModelName %>.id}">
+          Show
+        </Link>
+      </td>
+    </tr>
+  ));
+
+  return (
+    <div className="mt-3 flow-root">
+      <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+        <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+          <table className="min-w-full divide-y divide-gray-300">
+            <thead className="bg-gray-50">
+              <tr>
+                <% fields.forEach(field => { %>
+                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    <%= modelMetadata[field].label %>
+                  </th>
+                <% }) %>
+                <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200 bg-white">
+              {fieldData}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const knex = getKnex();
+  const <%= singularModelName %>sFromKnex = await knex("<%= singularModelName %>s");
+  const <%= singularModelName %>s = <%= singularModelName %>sFromKnex.map((<%= singularModelName %>: <%= modelName %>) => ({
+    ...<%= singularModelName %>,
+    created_at: <%= singularModelName %>.created_at?.toISOString(),
+    updated_at: <%= singularModelName %>.updated_at?.toISOString(),
+  }));
+
+  return {
+    props: {
+      <%= singularModelName %>s,
+    },
+  };
+};
+
+export default <%= PascalPluralModelName %>Page;
