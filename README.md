@@ -155,3 +155,11 @@ next-rails db:seed
 ```
 
 Runs all seeds.
+
+### `db:reset` ✅
+
+```bash
+next-rails db:reset
+```
+
+Drops all tables from the database. Then runs all migrations and seeds.
