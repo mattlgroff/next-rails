@@ -196,3 +196,11 @@ next-rails db:reset
 ```
 
 Drops all tables from the database. Then runs all migrations and seeds.
+
+### `db:schema_dump` ✅
+
+```bash
+next-rails db:schema_dump
+```
+
+Dumps the schema of the database to a file `/src/db/schema.json`. This is automatically done after each migration, but this command manually triggers it.

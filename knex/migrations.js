@@ -29,6 +29,18 @@ exports.migrate = () => {
     if (stdout) {
       console.log(stdout);
     }
+
+    console.log('Updating schema.json...');
+    exec('npx --no-install knex-next-rails db:schema_dump', (error, stdout, stderr) => {
+      if (error) {
+        console.error(`exec error: ${error}`);
+        return;
+      }
+      if (stderr) {
+        console.error(stderr);
+      }
+      console.log('Migrations complete!');
+    });
   });
 };
 
@@ -54,6 +66,17 @@ exports.reset = () => {
       if (stderr) {
         console.error(stderr);
       }
+
+      console.log('Updating schema.json...');
+      exec('npx --no-install knex-next-rails db:schema_dump', (error, stdout, stderr) => {
+        if (error) {
+          console.error(`exec error: ${error}`);
+          return;
+        }
+        if (stderr) {
+          console.error(stderr);
+        }
+      });
 
       console.log('Seeding database...');
 
@@ -86,6 +109,19 @@ exports.up = () => {
     if (stdout) {
       console.log(stdout);
     }
+
+    console.log('Updating schema.json...');
+    exec('npx --no-install knex-next-rails db:schema_dump', (error, stdout, stderr) => {
+      if (error) {
+        console.error(`exec error: ${error}`);
+        return;
+      }
+      if (stderr) {
+        console.error(stderr);
+      }
+
+      console.log('Migration complete!');
+    });
   });
 };
 
@@ -102,12 +138,41 @@ exports.down = () => {
     if (stdout) {
       console.log(stdout);
     }
+
+    console.log('Updating schema.json...');
+    exec('npx --no-install knex-next-rails db:schema_dump', (error, stdout, stderr) => {
+      if (error) {
+        console.error(`exec error: ${error}`);
+        return;
+      }
+      if (stderr) {
+        console.error(stderr);
+      }
+
+      console.log('Migration down complete!');
+    });
   });
 };
 
 exports.status = () => {
   console.log('Checking migration status...');
   exec('npx --no-install knex-next-rails migrate:status', (error, stdout, stderr) => {
+    if (error) {
+      console.error(`exec error: ${error}`);
+      return;
+    }
+    if (stderr) {
+      console.error(stderr);
+    }
+    if (stdout) {
+      console.log(stdout);
+    }
+  });
+};
+
+exports.schemaDump = () => {
+  console.log('Updating schema.json...');
+  exec('npx --no-install knex-next-rails db:schema_dump', (error, stdout, stderr) => {
     if (error) {
       console.error(`exec error: ${error}`);
       return;

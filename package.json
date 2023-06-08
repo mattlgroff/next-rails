@@ -1,7 +1,7 @@
 {
   "name": "next-rails",
-  "version": "1.0.15",
-  "description": "CLI for creating a next app with knex in a manner similar to the Rails CLI",
+  "version": "1.0.16",
+  "description": "CLI for creating a Next.js app with migrations, seeds, scaffolding, and more in a manner similar to the Rails CLI",
   "main": "index.js",
   "scripts": {
     "test": "jest"
@@ -14,7 +14,7 @@
   "dependencies": {
     "create-next-app": "13.4.4",
     "ejs": "3.1.9",
-    "knex-next-rails": "^1.0.6",
+    "knex-next-rails": "^1.0.14",
     "pluralize": "8.0.0",
     "yargs": "17.7.2"
   },

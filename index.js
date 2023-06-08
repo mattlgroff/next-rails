@@ -97,5 +97,6 @@ yargs(hideBin(process.argv))
   )
   .command('db:seed', 'Run seed files', {}, seeds.seed)
   .command('db:reset', 'Reset the database', {}, migrations.reset)
+  .command('db:schema_dump', 'Dump the database schema', {}, migrations.schemaDump)
   .demandCommand(1, 'You must provide a valid command')
   .help().argv;
