@@ -7,10 +7,16 @@ exports.up = function (knex, Promise) {
     table.<%= typeMapping[type] %>('<%= name %>').defaultTo(false);
     <% } else if (type === 'vector') { %>
     table.specificType('<%= name %>', 'vector(1536)');
+    <% } else if (type === 'reference') { %>
+    table.uuid('<%= name %>_id').notNullable();
     <% } else { %>
     table.<%= typeMapping[type] %>('<%= name %>').notNullable();
     <% } %>
     <% }); %>
+    <% references.forEach((ref) => { %>
+      table.uuid('<%= ref[0] %>_id').notNullable();
+      table.foreign('<%= ref[0] %>_id').references('id').inTable('<%= ref[1] %>');
+      <% }); %>      
     table.timestamp('created_at').defaultTo(knex.fn.now());
     table.timestamp('updated_at').defaultTo(knex.fn.now());
   });

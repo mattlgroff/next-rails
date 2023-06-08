@@ -10,6 +10,19 @@ function generateModelCode(singularModelName, options) {
 
   const modelName = singularModelName.charAt(0).toUpperCase() + singularModelName.slice(1);
 
+  // Replace references:foreignModelName with foreignModelName_id:string
+  options = options.map((option) => {
+    const [name, type] = option.split(':');
+
+    if(name === 'references') {
+      return `${type}_id:string`;
+    }
+
+    return option;
+  });
+
+
+
   const data = {
     singularModelName,
     modelName,

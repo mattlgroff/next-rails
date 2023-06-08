@@ -6,6 +6,7 @@ const typeMapping = {
   date: 'Date',
   text: 'string',
   vector: 'number[]',
+  references: 'uuid',
   // TODO: Add other type mappings as needed
 };
 

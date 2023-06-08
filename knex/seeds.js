@@ -2,7 +2,7 @@ const { exec } = require('child_process');
 
 exports.generate = ({ name }) => {
   console.log(`Generating seed ${name}...`);
-  exec(`npx --no-install knex seed:make ${name}`, (error, stdout, stderr) => {
+  exec(`npx --no-install knex-next-rails seed:make ${name}`, (error, stdout, stderr) => {
     if (error) {
       console.error(`exec error: ${error}`);
       return;
@@ -18,7 +18,7 @@ exports.generate = ({ name }) => {
 
 exports.seed = () => {
   console.log('Running seed...');
-  exec('npx --no-install knex seed:run', (error, stdout, stderr) => {
+  exec('npx --no-install knex-next-rails seed:run', (error, stdout, stderr) => {
     if (error) {
       console.error(`exec error: ${error}`);
       return;

@@ -13,9 +13,18 @@ function generateShowPage(singularModelName, pluralModelName, options) {
   // Construct the model metadata
   const modelMetadata = {
     id: { label: 'ID', display: (value) => value },
-    created_at: { label: 'Created At', display: (value) => value?.toLocaleString() || '' },
-    updated_at: { label: 'Updated At', display: (value) => value?.toLocaleString() || '' },
   };
+
+  // Replace references:foreignModelName with foreignModelName_id:string
+  options = options.map((option) => {
+    const [name, type] = option.split(':');
+
+    if (name === 'references') {
+      return `${type}_id:string`;
+    }
+
+    return option;
+  });
 
   // Add each option as a field in the metadata
   options.forEach((option) => {
@@ -37,6 +46,9 @@ function generateShowPage(singularModelName, pluralModelName, options) {
 
     modelMetadata[name] = { label: label, display: displayFunction };
   });
+
+  modelMetadata['created_at'] = { label: 'Created At', display: (value) => value?.toLocaleString() || '' };
+  modelMetadata['updated_at'] = { label: 'Updated At', display: (value) => value?.toLocaleString() || '' };
 
   const fields = Object.keys(modelMetadata);
 

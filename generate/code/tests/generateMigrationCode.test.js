@@ -8,7 +8,7 @@ const formatString = (str) => {
 describe('generateMigrationCode', () => {
   it('should generate correct migration code', async () => {
     const pluralModelName = 'users';
-    const options = ['name:string', 'age:integer', 'isActive:boolean', 'embedding:vector'];
+    const options = ['name:string', 'age:integer', 'isActive:boolean', 'embedding:vector' , 'references:user'];
     const result = formatString(await generateMigrationCode(pluralModelName, options));
 
     // Add your assertions here
@@ -17,6 +17,7 @@ describe('generateMigrationCode', () => {
     );
     expect(result).toContain(`table.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()'));`);
     expect(result).toContain(`table.specificType('embedding', 'vector(1536)');`);
+    expect(result).toContain(`table.foreign('user_id').references('id').inTable('users');`);
     expect(result).toContain(`table.timestamp('created_at').defaultTo(knex.fn.now());`);
     expect(result).toContain(`table.timestamp('updated_at').defaultTo(knex.fn.now());`);
     expect(result).toContain(`knex.schema.dropTable('${pluralModelName}');`);

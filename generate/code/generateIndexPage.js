@@ -17,6 +17,17 @@ function generateIndexPage(singularModelName, pluralModelName, options) {
     updated_at: { label: 'Updated At', display: (value) => value?.toLocaleString() || '' },
   };
 
+  // Replace references:foreignModelName with foreignModelName_id:string
+  options = options.map((option) => {
+    const [name, type] = option.split(':');
+
+    if (name === 'references') {
+      return `${type}_id:string`;
+    }
+
+    return option;
+  });
+
   // Add each option as a field in the metadata
   options.forEach((option) => {
     const [name, type] = option.split(':');

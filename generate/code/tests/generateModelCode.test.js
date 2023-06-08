@@ -19,7 +19,7 @@ describe('generateModelCode', () => {
 
   it('should generate correct model code for a Todo', async () => {
     const singularModelName = 'todo';
-    const options = ['title:string', 'is_completed:boolean'];
+    const options = ['title:string', 'is_completed:boolean', 'references:user'];
     const result = await generateModelCode(singularModelName, options);
 
     const modelName = singularModelName.charAt(0).toUpperCase() + singularModelName.slice(1);
@@ -28,6 +28,7 @@ describe('generateModelCode', () => {
     expect(result).toContain('id: string;');
     expect(result).toContain('title: string;');
     expect(result).toContain('is_completed: boolean;');
+    expect(result).toContain('user_id: string;');
     expect(result).toContain('created_at: Date;');
     expect(result).toContain('updated_at: Date;');
     expect(result).toContain(`export interface ${modelName}Metadata {`);

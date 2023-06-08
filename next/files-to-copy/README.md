@@ -105,6 +105,7 @@ Generates a new TypeScript interface representing a model with the given name an
 - date
 - text
 - vector
+- references
 
 The model interface will be created with the following default fields in addition to the fields specified by the options:
 
