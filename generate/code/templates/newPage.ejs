@@ -1,0 +1,120 @@
+import { GetServerSideProps } from "next";
+import { <%= modelName %>, <%= singularModelName %>Metadata as modelMetadata } from "@deps/db/models/<%= singularModelName %>";
+import Link from "next/link";
+import { useRouter } from 'next/router'
+
+interface <%= PascalPluralModelName %>PageProps {
+  <%= pluralModelName %>: <%= modelName %>[];
+}
+
+const <%= PascalPluralModelName %>Page = ({ <%= pluralModelName %> }: <%= PascalPluralModelName %>PageProps) => {
+  const router = useRouter();
+
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData.entries());
+    
+    const response = await fetch('/api/<%= pluralModelName %>/create', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (response.ok) {
+      router.push('/<%= pluralModelName %>');
+    } else {
+      const error = await response.json();
+      
+      alert(`There was a problem creating your <%= singularModelName %>. ${error.message}`);
+    }
+  }
+
+
+  return (
+    <div className="mx-auto md:w-2/3 w-full">
+      <h1 className="font-bold text-4xl">New <%= singularModelName %></h1>
+    
+      <form onSubmit={onSubmit}>
+        {
+          Object.keys(modelMetadata).map(key => {
+            if (key !== 'id' && key !== 'created_at' && key !== 'updated_at') {
+              if (modelMetadata[key].inputType === 'text') {
+                return (
+                  <div key={key} className="my-5">
+                    <label className="block text-gray-700 font-bold mb-2">{modelMetadata[key].label}</label>
+                    <input type="text" className="block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" />
+                  </div>
+                )
+              }
+
+              if (modelMetadata[key].inputType === 'textarea') {
+                return (
+                  <div key={key} className="my-5">
+                    <label className="block text-gray-700 font-bold mb-2">{modelMetadata[key].label}</label>
+                    <textarea rows={4} className="block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" />
+                  </div>
+                )
+              }
+
+              if (modelMetadata[key].inputType === 'number') {
+                return (
+                  <div key={key} className="my-5">
+                    <label className="block text-gray-700 font-bold mb-2">{modelMetadata[key].label}</label>
+                    <input type="number" className="block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" />
+                  </div>
+                )
+              }
+
+              if (modelMetaData[key].inputType === 'email') {
+                return (
+                  <div key={key} className="my-5">
+                    <label className="block text-gray-700 font-bold mb-2">{modelMetadata[key].label}</label>
+                    <input type="email" className="block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" />
+                  </div>
+                )
+              }
+
+              if (modelMetaData[key].inputType === 'password') {
+                return (
+                  <div key={key} className="my-5">
+                    <label className="block text-gray-700 font-bold mb-2">{modelMetadata[key].label}</label>
+                    <input type="password" className="block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" />
+                  </div>
+                )
+              }
+
+              if (modelMetaData[key].inputType === 'checkbox') {
+                return (
+                  <div key={key} className="my-5">
+                    <label className="block text-gray-700 font-bold mb-2">{modelMetadata[key].label}</label>
+                    <input type="checkbox" className="h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500" />
+                  </div>
+                )
+              }
+
+              if (modelMetaData[key].inputType === 'date') {
+                return (
+                  <div key={key} className="my-5">
+                    <label className="block text-gray-700 font-bold mb-2">{modelMetadata[key].label}</label>
+                    <input type="date" className="block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" />
+                  </div>
+                )
+              }
+            }
+          })
+        }
+        <div className="inline">
+          <button type="submit" className="rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer">Create <%= singularModelName %></button>
+        </div>
+      </form>
+
+
+      <Link to="/<%= pluralModelName %>" className="ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium">Back to <%= pluralModelName %></Link>
+    </div>
+  );
+};
+
+export default New<%= PascalPluralModelName %>Page;

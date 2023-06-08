@@ -10,12 +10,12 @@ function generateModelCode(singularModelName, options) {
 
   const modelName = singularModelName.charAt(0).toUpperCase() + singularModelName.slice(1);
 
-  // Replace references:foreignModelName with foreignModelName_id:string
+  // Replace foreignModelName:references with foreignModelName_id:string
   options = options.map((option) => {
     const [name, type] = option.split(':');
 
-    if(name === 'references') {
-      return `${type}_id:string`;
+    if(type === 'references') {
+      return `${name}_id:string`;
     }
 
     return option;

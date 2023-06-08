@@ -15,12 +15,12 @@ function generateShowPage(singularModelName, pluralModelName, options) {
     id: { label: 'ID', display: (value) => value },
   };
 
-  // Replace references:foreignModelName with foreignModelName_id:string
+  // Replace foreignModelName:references with foreignModelName_id:string
   options = options.map((option) => {
     const [name, type] = option.split(':');
 
-    if (name === 'references') {
-      return `${type}_id:string`;
+    if (type === 'references') {
+      return `${name}_id:string`;
     }
 
     return option;
@@ -31,17 +31,41 @@ function generateShowPage(singularModelName, pluralModelName, options) {
     const [name, type] = option.split(':');
     const label = toTitleCase(name);
     let displayFunction;
+    let inputType;
 
     switch (type) {
       case 'boolean':
         displayFunction = (value) => (value ? 'Yes' : 'No');
+        inputType = 'checkbox';
         break;
       case 'date':
         displayFunction = (value) => (value ? value.toISOString() : '');
+        inputType = 'date';
         break;
+      case 'number':
+        displayFunction = (value) => value;
+        inputType = 'number';
+        break;
+      case 'vector':
+      case 'text':
+        displayFunction = (value) => value;
+        inputType = 'textarea';
+        break;
+      case 'string':
       default:
         displayFunction = (value) => value;
+        inputType = 'text';
         break;
+    }
+
+    if (name === 'email') {
+      displayFunction = (value) => value;
+      inputType = 'email';
+    }
+
+    if (name === 'password') {
+      displayFunction = (value) => value;
+      inputType = 'password';
     }
 
     modelMetadata[name] = { label: label, display: displayFunction };

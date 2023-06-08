@@ -4,7 +4,7 @@ const typeMapping = {
   integer: 'number',
   boolean: 'boolean',
   date: 'Date',
-  text: 'string',
+  text: 'text',
   vector: 'number[]',
   references: 'uuid',
   // TODO: Add other type mappings as needed

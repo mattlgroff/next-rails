@@ -8,7 +8,7 @@ const formatString = (str) => {
 describe('generateMigrationCode', () => {
   it('should generate correct migration code', async () => {
     const pluralModelName = 'users';
-    const options = ['name:string', 'age:integer', 'isActive:boolean', 'embedding:vector' , 'references:user'];
+    const options = ['name:string', 'age:integer', 'isActive:boolean', 'embedding:vector' , 'user:references'];
     const result = formatString(await generateMigrationCode(pluralModelName, options));
 
     // Add your assertions here

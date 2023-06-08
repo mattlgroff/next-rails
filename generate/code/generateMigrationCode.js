@@ -16,15 +16,15 @@ function generateMigrationCode(pluralModelName, options) {
 
   // Extract all references to other models
   const references = options
-    .filter((option) => option.split(':')[0] === 'references')
+    .filter((option) => option.split(':')[1] === 'references')
     .map((option) => {
-      const singularName = option.split(':')[1];
+      const singularName = option.split(':')[0];
       const pluralName = pluralize(singularName);
       return [singularName, pluralName];
     });
 
   // Remove references from options, since we don't want to create any additional columns for them.
-  options = options.filter((option) => option.split(':')[0] !== 'references');
+  options = options.filter((option) => option.split(':')[1] !== 'references');
 
   const data = {
     pluralModelName,

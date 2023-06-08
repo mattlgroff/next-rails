@@ -19,7 +19,7 @@ describe('generateModelCode', () => {
 
   it('should generate correct model code for a Todo', async () => {
     const singularModelName = 'todo';
-    const options = ['title:string', 'is_completed:boolean', 'references:user'];
+    const options = ['title:string', 'is_completed:boolean', 'user:references'];
     const result = await generateModelCode(singularModelName, options);
 
     const modelName = singularModelName.charAt(0).toUpperCase() + singularModelName.slice(1);

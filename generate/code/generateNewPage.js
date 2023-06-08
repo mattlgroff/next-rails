@@ -13,6 +13,8 @@ function generateIndexPage(singularModelName, pluralModelName, options) {
   // Construct the model metadata
   const modelMetadata = {
     id: { label: 'ID', display: (value) => value },
+    created_at: { label: 'Created At', display: (value) => value?.toLocaleString() || '' },
+    updated_at: { label: 'Updated At', display: (value) => value?.toLocaleString() || '' },
   };
 
   // Replace foreignModelName:references with foreignModelName_id:string
@@ -31,24 +33,45 @@ function generateIndexPage(singularModelName, pluralModelName, options) {
     const [name, type] = option.split(':');
     const label = toTitleCase(name);
     let displayFunction;
+    let inputType;
 
     switch (type) {
       case 'boolean':
         displayFunction = (value) => (value ? 'Yes' : 'No');
+        inputType = 'checkbox';
         break;
       case 'date':
         displayFunction = (value) => (value ? value.toISOString() : '');
+        inputType = 'date';
         break;
+      case 'number':
+        displayFunction = (value) => value;
+        inputType = 'number';
+        break;
+      case 'vector':
+      case 'text':
+        displayFunction = (value) => value;
+        inputType = 'textarea';
+        break;
+      case 'string':
       default:
         displayFunction = (value) => value;
+        inputType = 'text';
         break;
+    }
+
+    if (name === 'email') {
+      displayFunction = (value) => value;
+      inputType = 'email';
+    }
+
+    if (name === 'password') {
+      displayFunction = (value) => value;
+      inputType = 'password';
     }
 
     modelMetadata[name] = { label: label, display: displayFunction };
   });
-
-  modelMetadata['created_at'] = { label: 'Created At', display: (value) => value?.toLocaleString() || '' };
-  modelMetadata['updated_at'] = { label: 'Updated At', display: (value) => value?.toLocaleString() || '' };
 
   const fields = Object.keys(modelMetadata);
 

@@ -22,34 +22,37 @@ const <%= PascalPluralModelName %>Page = ({ <%= pluralModelName %> }: <%= Pascal
   ));
 
   return (
-    <div className="mt-3 flow-root">
-      <h1 className="w-full text-2xl font-bold text-center"><%= pluralModelName %></h1>
-      <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-        <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
-          <table className="min-w-full divide-y divide-gray-300">
-            <thead className="bg-gray-50">
-              <tr>
-                <% fields.forEach(field => { %>
-                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                    <%= modelMetadata[field].label %>
-                  </th>
-                <% }) %>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
-              {fieldData}
-            </tbody>
-          </table>
-        </div>
+    <div className="w-full">
+      <div className="flex justify-between items-center">
+        <h1 className="font-bold text-4xl"><%= PascalPluralModelName %></h1>
+        <Link href="/<%= pluralModelName %>/new" className="rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium">New <%= singularModelName %></Link>
+      </div>
+    
+      <div id="<%= pluralModelName %>" className="min-w-full">
+        <table className="min-w-full divide-y divide-gray-300">
+          <thead className="bg-gray-50">
+            <tr>
+              <% fields.forEach(field => { %>
+                <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                  <%= modelMetadata[field].label %>
+                </th>
+              <% }) %>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200 bg-white">
+            {fieldData}
+          </tbody>
+        </table>
       </div>
     </div>
+
   );
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const knex = getKnex();
-  const <%= singularModelName %>sFromKnex = await knex("<%= singularModelName %>s");
-  const <%= singularModelName %>s = <%= singularModelName %>sFromKnex.map((<%= singularModelName %>: <%= modelName %>) => ({
+  const <%= pluralModelName %>FromKnex = await knex("<%= singularModelName %>s");
+  const <%= pluralModelName %> = <%= pluralModelName %>FromKnex.map((<%= singularModelName %>: <%= modelName %>) => ({
     ...<%= singularModelName %>,
     created_at: <%= singularModelName %>.created_at?.toISOString(),
     updated_at: <%= singularModelName %>.updated_at?.toISOString(),
@@ -57,7 +60,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
   return {
     props: {
-      <%= singularModelName %>s,
+      <%= pluralModelName %>,
     },
   };
 };
