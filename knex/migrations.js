@@ -111,7 +111,7 @@ exports.up = () => {
     }
 
     console.log('Updating schema.json...');
-    exec('npx knex-next-rails db:schema_dump', (error, stdout, stderr) => {
+    exec('npx knex-next-rails@latest db:schema_dump', (error, stdout, stderr) => {
       if (error) {
         console.error(`exec error: ${error}`);
         return;
@@ -140,7 +140,7 @@ exports.down = () => {
     }
 
     console.log('Updating schema.json...');
-    exec('npx knex-next-rails db:schema_dump', (error, stdout, stderr) => {
+    exec('npx knex-next-rails@latest db:schema_dump', (error, stdout, stderr) => {
       if (error) {
         console.error(`exec error: ${error}`);
         return;
@@ -172,7 +172,7 @@ exports.status = () => {
 
 exports.schemaDump = () => {
   console.log('Updating schema.json...');
-  exec('npx knex-next-rails db:schema_dump', (error, stdout, stderr) => {
+  exec('npx knex-next-rails@latest db:schema_dump', (error, stdout, stderr) => {
     if (error) {
       console.error(`exec error: ${error}`);
       return;
