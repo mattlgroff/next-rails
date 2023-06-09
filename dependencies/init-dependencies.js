@@ -1,6 +1,6 @@
 const { join, resolve } = require('path');
 const { execSync } = require('child_process');
-const { readFileSync, copyFileSync, writeFileSync } = require('fs');
+const { copyFileSync } = require('fs');
 
 const initDependencies = (appPath) => {
   console.log('🚀 Installing additional dependencies...');
@@ -56,24 +56,6 @@ const initDependencies = (appPath) => {
   const srcGlobalsCssPath = resolve(__dirname, './files-to-copy/globals.css');
   const destGlobalsCssPath = join(appPath, 'src/styles/globals.css');
   copyFileSync(srcGlobalsCssPath, destGlobalsCssPath);
-
-  console.log('🔧 Updating the start script in package.json...');
-  const packageJsonPath = join(appPath, 'package.json');
-
-  // Read package.json
-  const data = readFileSync(packageJsonPath, { encoding: 'utf8' });
-
-  // Parse the JSON
-  const packageJson = JSON.parse(data);
-
-  // Update the "start" script
-  packageJson.scripts.start = 'npx next-rails db:migrate && next start';
-
-  // Convert it back to a string
-  const updatedPackageJson = JSON.stringify(packageJson, null, 2);
-
-  // Write it back to package.json
-  writeFileSync(packageJsonPath, updatedPackageJson, { encoding: 'utf8' });
 
   console.log('🚂 Done! Consider running `next-rails generate scaffold` to generate your first model.`');
 };
