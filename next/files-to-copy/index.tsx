@@ -12,7 +12,7 @@ type IndexPageProps = {
 
 const IndexPage: FunctionComponent<IndexPageProps> = ({ tables }) => (
   <div className="container mx-auto px-4 py-8">
-    <h1 className="mb-8 text-4xl">Welcome to Next.js, initialized via Next-Rails CLI</h1>
+    <h1 className="mb-8 text-4xl">Welcome to Next.js, initialized via Next-Rails</h1>
 
     {Object.keys(tables).length === 0 && (
       <h3 className="mb-8 text-2xl">No tables found in your database schema yet. Try scaffolding and migrating.</h3>
