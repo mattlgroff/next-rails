@@ -204,3 +204,13 @@ next-rails db:schema_dump
 ```
 
 Dumps the schema of the database to a file `/src/db/schema.json`. This is automatically done after each migration, but this command manually triggers it.
+
+## Deploying to Vercel
+Make sure to add your cloud-based PostgreSQL connection string to the Environment Variables in your Vercel project settings. The connection string should be named `DATABASE_URL`. If you're using Neon, you need to add `?sslmode=require` onto the end of your connection string.
+
+Then in your Build & Development settings, add the following to your Build Command as an Override:
+```bash
+next build && npx next-rails db:migrate
+```
+
+This will make sure whenever you make a new push to `main` or `master`, your migrations will be run automatically when Vercel builds your app.
