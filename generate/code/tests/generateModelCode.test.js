@@ -35,10 +35,10 @@ describe('generateModelCode', () => {
 
     // Let's also test the metadata
     expect(result).toContain(`export const ${singularModelName}Metadata: ${modelName}Metadata = {`);
-    expect(result).toContain(`id: { label: 'ID', display: (value: string) => value }`);
-    expect(result).toContain(`title: { label: 'Title', display: (value: string) => value }`);
-    expect(result).toContain(`is_completed: { label: 'Is Completed', display: (value: boolean) => value ? "Yes" : "No" }`);
-    expect(result).toContain(`created_at: { label: 'Created At', display: (value: Date) => value?.toLocaleString() || "" }`);
-    expect(result).toContain(`updated_at: { label: 'Updated At', display: (value: Date) => value?.toLocaleString() || "" }`);
+    expect(result).toContain(`id: { label: 'ID' }`);
+    expect(result).toContain(`title: { label: 'Title', inputType: 'text' }`);
+    expect(result).toContain(`is_completed: { label: 'Is Completed', inputType: 'checkbox' }`);
+    expect(result).toContain(`created_at: { label: 'Created At' }`);
+    expect(result).toContain(`updated_at: { label: 'Updated At' }`);
   });
 });

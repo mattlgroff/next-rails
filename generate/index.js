@@ -12,6 +12,7 @@ const {
   generateIndexControllerCode,
 } = require('./code/generateApiCode');
 const generateShowPage = require('./code/generateShowPage');
+const generateNewPage = require('./code/generateNewPage');
 const { writeStringToFile, generateCurrentTimestamp } = require('../utils');
 
 function generateModel(modelName, options) {
@@ -113,9 +114,18 @@ function generateScaffold(modelName, options) {
   fs.mkdirSync(path.join(process.cwd(), `src/pages/${pluralModelName}`, '[id]'), { recursive: true });
   const showPath = path.join(process.cwd(), `src/pages/${pluralModelName}/[id]`, 'index.tsx');
 
-  generateShowPage(singularModelName, pluralModelName, options)
+  generateShowPage(singularModelName, pluralModelName)
     .then((result) => {
       writeStringToFile(result, showPath);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+
+  const newPath = path.join(process.cwd(), 'src/pages', pluralModelName, 'new.tsx');
+  generateNewPage(singularModelName, pluralModelName)
+    .then((result) => {
+      writeStringToFile(result, newPath);
     })
     .catch((error) => {
       console.error(error);

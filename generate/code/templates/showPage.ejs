@@ -27,30 +27,39 @@ const Show<%= PascalSingularModelName %>Page = ({ <%= singularModelName %> }: Sh
   };
 
   const fieldData = Object.keys(modelMetadata).map(field => (
-    <div key={field}>
-      <h3>{modelMetadata[field].label}</h3>
-      <p>{<%= singularModelName %>[field] !== null && typeof <%= singularModelName %>[field] !== 'undefined' ? modelMetadata[field].display(<%= singularModelName %>[field]) : ""}</p>
-    </div>
+    <p key={field} className="my-5">
+      <strong class="block font-medium mb-1">{modelMetadata[field].label}</strong>
+      {<%= singularModelName %>[field] !== null && typeof <%= singularModelName %>[field] !== 'undefined' 
+          ? typeof <%= singularModelName %>[field] === 'boolean'
+            ? <%= singularModelName %>[field] ? "Yes" : "No"
+            : typeof <%= singularModelName %>[field] === 'date'
+              ? new Date(<%= singularModelName %>[field]).toISOString() 
+              : String(<%= singularModelName %>[field])
+          : ""}
+    </p>
   ));
 
   return (
-    <div className="container mx-auto mt-6">
-      <Link href={`/<%= pluralModelName %>`} className="px-4 py-2 bg-blue-500 text-white rounded">
-        Back to <%= pluralModelName %>
-      </Link>
-      <h1 className="text-2xl font-bold">Show <%= modelName %></h1>
-      <div className="max-w-2xl mx-auto">
-        {fieldData}
-        <div className="mt-6 flex space-x-4">
-          <Link href={`/<%= pluralModelName %>/${<%= singularModelName %>.id}/edit`} className="px-4 py-2 bg-blue-500 text-white rounded">
-            Edit <%= modelName %>
-          </Link>
-          <button onClick={handleDelete} className="px-4 py-2 bg-red-500 text-white rounded">
-            Delete <%= modelName %>
+    <div class="mx-auto md:w-2/3 w-full flex">
+      <div class="mx-auto">
+        <div id="<%= singularModelName %>">
+          {fieldData}
+        </div>
+           
+        <Link href={`/<%= pluralModelName %>/${<%= singularModelName %>.id}/edit`} className="mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium">
+          Edit this <%= singularModelName %>
+        </Link>
+       
+        <div class="inline-block ml-2">
+          <button onClick={handleDelete} className="mt-2 rounded-lg py-3 px-5 bg-gray-100 font-medium">
+            Destroy this <%= singularModelName %>
           </button>
         </div>
+        <Link href={`/<%= pluralModelName %>`} className="ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium">
+          Back to <%= pluralModelName %>
+        </Link>
       </div>
-  </div>
+    </div>
   );
 };
 

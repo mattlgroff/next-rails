@@ -13,8 +13,14 @@ const <%= PascalPluralModelName %>Page = ({ <%= pluralModelName %> }: <%= Pascal
       <% fields.forEach(field => { %>
         <td className="whitespace-nowrap px-3 py-4 text-sm font-medium text-gray-900">
           { modelMetadata['<%= field %>'].label === 'ID'
-            ? <Link className="text-blue-500" href={`/<%= pluralModelName %>/${<%= singularModelName %>.id}`}>{<%= singularModelName %>.<%= field %> !== null && typeof <%= singularModelName %>.<%= field %> !== 'undefined' ? modelMetadata['<%= field %>'].display(<%= singularModelName %>.<%= field %>) : ""}</Link>
-            : <%= singularModelName %>.<%= field %> !== null && typeof <%= singularModelName %>.<%= field %> !== 'undefined' ? modelMetadata['<%= field %>'].display(<%= singularModelName %>.<%= field %>) : ""
+            ? <Link className="text-blue-500" href={`/<%= pluralModelName %>/${<%= singularModelName %>.id}`}>{<%= singularModelName %>.<%= field %> !== null && typeof <%= singularModelName %>.<%= field %> !== 'undefined' ? String(<%= singularModelName %>.<%= field %>) : ""}</Link>
+            : <%= singularModelName %>.<%= field %> !== null && typeof <%= singularModelName %>.<%= field %> !== 'undefined' 
+              ? typeof <%= singularModelName %>.<%= field %> === 'boolean'
+                ? <%= singularModelName %>.<%= field %> ? "Yes" : "No"
+                : typeof <%= singularModelName %>.<%= field %> === 'date'
+                  ? new Date(<%= singularModelName %>.<%= field %>).toISOString() 
+                  : String(<%= singularModelName %>.<%= field %>)
+              : ""
           }
         </td>
       <% }) %>

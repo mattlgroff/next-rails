@@ -16,7 +16,7 @@ function writeStringToFile(string, filePath) {
     console.log(`✅ File ${filePath} written successfully`);
 
     // Prettier formatting
-    execSync('npx --no-install prettier --write ./src');
+    execSync(`npx --no-install prettier --write ${filePath}`);
   });
 }
 

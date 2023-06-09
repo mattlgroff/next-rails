@@ -14,14 +14,12 @@ function generateModelCode(singularModelName, options) {
   options = options.map((option) => {
     const [name, type] = option.split(':');
 
-    if(type === 'references') {
+    if (type === 'references') {
       return `${name}_id:string`;
     }
 
     return option;
   });
-
-
 
   const data = {
     singularModelName,

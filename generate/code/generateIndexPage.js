@@ -28,27 +28,14 @@ function generateIndexPage(singularModelName, pluralModelName, options) {
 
   // Add each option as a field in the metadata
   options.forEach((option) => {
-    const [name, type] = option.split(':');
+    const [name] = option.split(':');
     const label = toTitleCase(name);
-    let displayFunction;
 
-    switch (type) {
-      case 'boolean':
-        displayFunction = (value) => (value ? 'Yes' : 'No');
-        break;
-      case 'date':
-        displayFunction = (value) => (value ? value.toISOString() : '');
-        break;
-      default:
-        displayFunction = (value) => value;
-        break;
-    }
-
-    modelMetadata[name] = { label: label, display: displayFunction };
+    modelMetadata[name] = { label };
   });
 
-  modelMetadata['created_at'] = { label: 'Created At', display: (value) => value?.toLocaleString() || '' };
-  modelMetadata['updated_at'] = { label: 'Updated At', display: (value) => value?.toLocaleString() || '' };
+  modelMetadata['created_at'] = { label: 'Created At' };
+  modelMetadata['updated_at'] = { label: 'Updated At' };
 
   const fields = Object.keys(modelMetadata);
 
