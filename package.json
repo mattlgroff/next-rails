@@ -1,6 +1,6 @@
 {
   "name": "next-rails",
-  "version": "1.0.22",
+  "version": "1.0.23",
   "description": "CLI for creating a Next.js app with migrations, seeds, scaffolding, and more in a manner similar to the Rails CLI",
   "main": "index.js",
   "scripts": {
@@ -14,7 +14,6 @@
   "dependencies": {
     "create-next-app": "13.4.4",
     "ejs": "3.1.9",
-    "knex-next-rails": "^1.0.14",
     "pluralize": "8.0.0",
     "yargs": "17.7.2"
   },
@@ -23,6 +22,7 @@
     "url": "https://github.com/mattlgroff/next-rails"
   },
   "devDependencies": {
-    "jest": "29.5.0"
+    "jest": "29.5.0",
+    "knex-next-rails": "^1.0.14"
   }
 }
