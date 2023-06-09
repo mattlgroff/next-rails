@@ -52,6 +52,11 @@ const initDependencies = (appPath) => {
   const destKnexIndexPath = join(knexDirPath, 'index.js');
   copyFileSync(srcKnexIndexPath, destKnexIndexPath);
 
+  console.log('🖌️ Copying over the globals.css default for TailwindCSS...');
+  const srcGlobalsCssPath = resolve(__dirname, './files-to-copy/globals.css');
+  const destGlobalsCssPath = join(appPath, 'src/styles/globals.css');
+  copyFileSync(srcGlobalsCssPath, destGlobalsCssPath);
+
   console.log('🚂 Done! Consider running `next-rails generate scaffold` to generate your first model.`');
 };
 

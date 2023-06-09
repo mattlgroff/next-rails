@@ -52,6 +52,12 @@ const initNextApp = (appDir) => {
   const destEnvLocalPath = join(appPath, '.env.local');
   copyFileSync(srcEnvLocalPath, destEnvLocalPath);
 
+  // Copy index.tsx to /src/pages/index.tsx
+  console.log('Copying over index.tsx to /src/pages/index.tsx...');
+  const srcIndexTsxPath = resolve(__dirname, './files-to-copy/index.tsx');
+  const destIndexTsxPath = join(appPath, 'src/pages/index.tsx');
+  copyFileSync(srcIndexTsxPath, destIndexTsxPath);
+
   // After Next.js app creation and copying README.md, initialize additional dependencies (Sequelize, Prettier, etc).
   initDependencies(appPath);
 };

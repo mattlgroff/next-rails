@@ -40,26 +40,28 @@ const Show<%= PascalSingularModelName %>Page = ({ <%= singularModelName %> }: Sh
   ));
 
   return (
-    <div class="mx-auto md:w-2/3 w-full flex">
-      <div class="mx-auto">
-        <div id="<%= singularModelName %>">
-          {fieldData}
+    <main class="container mx-auto mt-28 px-5 flex min-h-screen">
+      <div class="mx-auto md:w-2/3 w-full flex">
+        <div class="mx-auto">
+          <div id="<%= singularModelName %>">
+            {fieldData}
+          </div>
+            
+          <Link href={`/<%= pluralModelName %>/${<%= singularModelName %>.id}/edit`} className="mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium">
+            Edit this <%= singularModelName %>
+          </Link>
+        
+          <div class="inline-block ml-2">
+            <button onClick={handleDelete} className="mt-2 rounded-lg py-3 px-5 bg-gray-100 font-medium">
+              Destroy this <%= singularModelName %>
+            </button>
+          </div>
+          <Link href={`/<%= pluralModelName %>`} className="ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium">
+            Back to <%= pluralModelName %>
+          </Link>
         </div>
-           
-        <Link href={`/<%= pluralModelName %>/${<%= singularModelName %>.id}/edit`} className="mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium">
-          Edit this <%= singularModelName %>
-        </Link>
-       
-        <div class="inline-block ml-2">
-          <button onClick={handleDelete} className="mt-2 rounded-lg py-3 px-5 bg-gray-100 font-medium">
-            Destroy this <%= singularModelName %>
-          </button>
-        </div>
-        <Link href={`/<%= pluralModelName %>`} className="ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium">
-          Back to <%= pluralModelName %>
-        </Link>
       </div>
-    </div>
+    </main>
   );
 };
 
