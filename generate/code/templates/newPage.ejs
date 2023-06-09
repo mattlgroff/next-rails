@@ -1,13 +1,8 @@
-import { GetServerSideProps } from "next";
-import { <%= modelName %>, <%= singularModelName %>Metadata as modelMetadata } from "@deps/db/models/<%= singularModelName %>";
+import { <%= singularModelName %>Metadata as modelMetadata, <%= PascalSingularModelName %>Metadata } from "@deps/db/models/<%= singularModelName %>";
 import Link from "next/link";
 import { useRouter } from 'next/router'
 
-interface <%= PascalPluralModelName %>PageProps {
-  <%= pluralModelName %>: <%= modelName %>[];
-}
-
-const New<%= PascalSingleModelName %>Page = ({ <%= pluralModelName %> }: <%= PascalPluralModelName %>PageProps) => {
+const New<%= PascalSingularModelName %>Page = () => {
   const router = useRouter();
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -34,13 +29,13 @@ const New<%= PascalSingleModelName %>Page = ({ <%= pluralModelName %> }: <%= Pas
 
 
   return (
-    <main class="container mx-auto mt-28 px-5 flex min-h-screen">
+    <main className="container mx-auto mt-28 px-5 flex min-h-screen">
       <div className="mx-auto md:w-2/3 w-full">
         <h1 className="font-bold text-4xl">New <%= singularModelName %></h1>
       
         <form onSubmit={onSubmit}>
           {
-            Object.keys(modelMetadata).map(key => {
+            (Object.keys(modelMetadata) as Array<keyof <%= PascalSingularModelName %>Metadata>).map(key => {
               if (key !== 'id' && key !== 'created_at' && key !== 'updated_at') {
                 if (modelMetadata[key].inputType === 'text') {
                   return (
@@ -69,7 +64,7 @@ const New<%= PascalSingleModelName %>Page = ({ <%= pluralModelName %> }: <%= Pas
                   )
                 }
 
-                if (modelMetaData[key].inputType === 'email') {
+                if (modelMetadata[key].inputType === 'email') {
                   return (
                     <div key={key} className="my-5">
                       <label className="block text-gray-700 font-bold mb-2">{modelMetadata[key].label}</label>
@@ -78,7 +73,7 @@ const New<%= PascalSingleModelName %>Page = ({ <%= pluralModelName %> }: <%= Pas
                   )
                 }
 
-                if (modelMetaData[key].inputType === 'password') {
+                if (modelMetadata[key].inputType === 'password') {
                   return (
                     <div key={key} className="my-5">
                       <label className="block text-gray-700 font-bold mb-2">{modelMetadata[key].label}</label>
@@ -87,7 +82,7 @@ const New<%= PascalSingleModelName %>Page = ({ <%= pluralModelName %> }: <%= Pas
                   )
                 }
 
-                if (modelMetaData[key].inputType === 'checkbox') {
+                if (modelMetadata[key].inputType === 'checkbox') {
                   return (
                     <div key={key} className="my-5">
                       <label className="block text-gray-700 font-bold mb-2">{modelMetadata[key].label}</label>
@@ -96,7 +91,7 @@ const New<%= PascalSingleModelName %>Page = ({ <%= pluralModelName %> }: <%= Pas
                   )
                 }
 
-                if (modelMetaData[key].inputType === 'date') {
+                if (modelMetadata[key].inputType === 'date') {
                   return (
                     <div key={key} className="my-5">
                       <label className="block text-gray-700 font-bold mb-2">{modelMetadata[key].label}</label>
@@ -119,4 +114,4 @@ const New<%= PascalSingleModelName %>Page = ({ <%= pluralModelName %> }: <%= Pas
   );
 };
 
-export default New<%= PascalSingleModelName %>Page;
+export default New<%= PascalSingularModelName %>Page;

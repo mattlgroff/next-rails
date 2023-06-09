@@ -17,9 +17,7 @@ const <%= PascalPluralModelName %>Page = ({ <%= pluralModelName %> }: <%= Pascal
             : <%= singularModelName %>.<%= field %> !== null && typeof <%= singularModelName %>.<%= field %> !== 'undefined' 
               ? typeof <%= singularModelName %>.<%= field %> === 'boolean'
                 ? <%= singularModelName %>.<%= field %> ? "Yes" : "No"
-                : typeof <%= singularModelName %>.<%= field %> === 'date'
-                  ? new Date(<%= singularModelName %>.<%= field %>).toISOString() 
-                  : String(<%= singularModelName %>.<%= field %>)
+                : String(<%= singularModelName %>.<%= field %>)
               : ""
           }
         </td>
@@ -28,7 +26,7 @@ const <%= PascalPluralModelName %>Page = ({ <%= pluralModelName %> }: <%= Pascal
   ));
 
   return (
-    <main class="container mx-auto mt-28 px-5 flex min-h-screen">
+    <main className="container mx-auto mt-28 px-5 flex min-h-screen">
       <div className="w-full">
         <div className="flex justify-between items-center">
           <h1 className="font-bold text-4xl"><%= PascalPluralModelName %></h1>

@@ -1,5 +1,5 @@
 import { GetServerSideProps } from "next";
-import { <%= modelName %>, <%= singularModelName %>Metadata as modelMetadata } from "@deps/db/models/<%= singularModelName %>";
+import { <%= modelName %>, <%= singularModelName %>Metadata as modelMetadata, <%= PascalSingularModelName %>Metadata } from "@deps/db/models/<%= singularModelName %>";
 import Link from "next/link";
 import { getKnex } from "@deps/db";
 import { useRouter } from 'next/router';
@@ -26,23 +26,21 @@ const Show<%= PascalSingularModelName %>Page = ({ <%= singularModelName %> }: Sh
     }
   };
 
-  const fieldData = Object.keys(modelMetadata).map(field => (
+  const fieldData = (Object.keys(modelMetadata) as Array<keyof <%= PascalSingularModelName %>Metadata>).map((field) => (
     <p key={field} className="my-5">
-      <strong class="block font-medium mb-1">{modelMetadata[field].label}</strong>
+      <strong className="block font-medium mb-1">{modelMetadata[field].label}</strong>
       {<%= singularModelName %>[field] !== null && typeof <%= singularModelName %>[field] !== 'undefined' 
           ? typeof <%= singularModelName %>[field] === 'boolean'
             ? <%= singularModelName %>[field] ? "Yes" : "No"
-            : typeof <%= singularModelName %>[field] === 'date'
-              ? new Date(<%= singularModelName %>[field]).toISOString() 
-              : String(<%= singularModelName %>[field])
+            : String(<%= singularModelName %>[field])
           : ""}
     </p>
   ));
 
   return (
-    <main class="container mx-auto mt-28 px-5 flex min-h-screen">
-      <div class="mx-auto md:w-2/3 w-full flex">
-        <div class="mx-auto">
+    <main className="container mx-auto mt-28 px-5 flex min-h-screen">
+      <div className="mx-auto md:w-2/3 w-full flex">
+        <div className="mx-auto">
           <div id="<%= singularModelName %>">
             {fieldData}
           </div>
@@ -51,7 +49,7 @@ const Show<%= PascalSingularModelName %>Page = ({ <%= singularModelName %> }: Sh
             Edit this <%= singularModelName %>
           </Link>
         
-          <div class="inline-block ml-2">
+          <div className="inline-block ml-2">
             <button onClick={handleDelete} className="mt-2 rounded-lg py-3 px-5 bg-gray-100 font-medium">
               Destroy this <%= singularModelName %>
             </button>
