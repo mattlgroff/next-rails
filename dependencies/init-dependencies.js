@@ -1,6 +1,6 @@
 const { join, resolve } = require('path');
 const { execSync } = require('child_process');
-const { copyFileSync } = require('fs');
+const { readFileSync, copyFileSync, writeFileSync } = require('fs');
 
 const initDependencies = (appPath) => {
   console.log('🚀 Installing additional dependencies...');
@@ -11,7 +11,7 @@ const initDependencies = (appPath) => {
 
   // Install Prettier, ESLint, Lint Staged, and Husky packages.
   const installDevCommand =
-    'npm install --save-dev prettier prettier-plugin-tailwindcss eslint-config-prettier eslint-plugin-prettier @types/pg @typescript-eslint/eslint-plugin';
+    'npm install --save-dev prettier prettier-plugin-tailwindcss eslint-config-prettier eslint-plugin-prettier @types/pg @typescript-eslint/eslint-plugin next-rails';
   execSync(installDevCommand, { cwd: appPath, stdio: 'inherit' });
 
   // TODO: Add husky and lint-staged and configure them as well
@@ -56,6 +56,24 @@ const initDependencies = (appPath) => {
   const srcGlobalsCssPath = resolve(__dirname, './files-to-copy/globals.css');
   const destGlobalsCssPath = join(appPath, 'src/styles/globals.css');
   copyFileSync(srcGlobalsCssPath, destGlobalsCssPath);
+
+  console.log('🔧 Updating the start script in package.json...');
+  const packageJsonPath = join(appPath, 'package.json');
+
+  // Read package.json
+  const data = readFileSync(packageJsonPath, { encoding: 'utf8' });
+
+  // Parse the JSON
+  const packageJson = JSON.parse(data);
+
+  // Update the "start" script
+  packageJson.scripts.start = 'npx next-rails db:migrate && next start';
+
+  // Convert it back to a string
+  const updatedPackageJson = JSON.stringify(packageJson, null, 2);
+
+  // Write it back to package.json
+  writeFileSync(packageJsonPath, updatedPackageJson, { encoding: 'utf8' });
 
   console.log('🚂 Done! Consider running `next-rails generate scaffold` to generate your first model.`');
 };

@@ -1,4 +1,4 @@
-exports.up = function (knex, Promise) {
+exports.up = function (knex) {
   return knex.schema.raw('<%- extensionsToInstall %>').createTable('<%= pluralModelName %>', function (table) {
     table.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()'));
     <% options.forEach((option) => { %>
@@ -22,6 +22,6 @@ exports.up = function (knex, Promise) {
   });
 };
 
-exports.down = function (knex, Promise) {
+exports.down = function (knex) {
   return knex.schema.dropTable('<%= pluralModelName %>');
 };
