@@ -18,6 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   }
 
   const updated<%= capitalizedSingularModelName %>: <%= capitalizedSingularModelName %> = req.body;
+  updated<%= capitalizedSingularModelName %>['updated_at'] = new Date();
 
   try {
     const [updatedEntry] = await knex('<%= pluralModelName %>').where('id', id).update(updated<%= capitalizedSingularModelName %>).returning('*');

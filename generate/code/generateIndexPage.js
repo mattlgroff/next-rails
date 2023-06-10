@@ -39,7 +39,6 @@ function generateIndexPage(singularModelName, pluralModelName, options) {
 
   const fields = Object.keys(modelMetadata);
 
-  // Use a Promise to make the function asynchronous
   return new Promise((resolve, reject) => {
     ejs.renderFile(
       path.resolve(__dirname, './templates/indexPage.ejs'),

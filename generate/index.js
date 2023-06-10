@@ -13,6 +13,7 @@ const {
 } = require('./code/generateApiCode');
 const generateShowPage = require('./code/generateShowPage');
 const generateNewPage = require('./code/generateNewPage');
+const generateEditPage = require('./code/generateEditPage');
 const { writeStringToFile, generateCurrentTimestamp } = require('../utils');
 
 function generateModel(modelName, options) {
@@ -126,6 +127,15 @@ function generateScaffold(modelName, options) {
   generateNewPage(singularModelName, pluralModelName)
     .then((result) => {
       writeStringToFile(result, newPath);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+
+  const editPath = path.join(process.cwd(), `src/pages/${pluralModelName}/[id]`, 'edit.tsx');
+  generateEditPage(singularModelName, pluralModelName)
+    .then((result) => {
+      writeStringToFile(result, editPath);
     })
     .catch((error) => {
       console.error(error);

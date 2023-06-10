@@ -136,7 +136,7 @@ Note that for the model name, the singular form should be provided (ex: "Post" o
 * /plural-model-name/index.tsx - A page that lists all records. (Index) ✅
 * /plural-model-name/:id/index.tsx - A page that displays a single record. (Show) (Delete) ✅
 * /plural-model-name/new.tsx - A page that allows you to create a new record. (Create) ✅
-* /plural-model-name/:id/edit - A page that allows you to edit a record. (Update) ❌
+* /plural-model-name/:id/edit - A page that allows you to edit a record. (Update) ✅
 
 ### `migration:generate` ✅
 
