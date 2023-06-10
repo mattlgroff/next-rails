@@ -1,6 +1,6 @@
 {
   "name": "next-rails",
-  "version": "1.0.26",
+  "version": "1.0.27",
   "description": "CLI for creating a Next.js app with migrations, seeds, scaffolding, and more in a manner similar to the Rails CLI",
   "main": "index.js",
   "scripts": {

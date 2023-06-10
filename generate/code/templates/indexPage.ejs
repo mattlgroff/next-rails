@@ -1,13 +1,16 @@
+import fs from 'fs';
+import path from 'path';
 import { GetServerSideProps } from "next";
-import { <%= modelName %>, <%= singularModelName %>Metadata as modelMetadata } from "@deps/db/models/<%= singularModelName %>";
+import { <%= modelName %>, <%= singularModelName %>Metadata as modelMetadata } from "@/db/models/<%= singularModelName %>";
 import Link from "next/link";
-import { getKnex } from "@deps/db";
+import { getKnex } from "@/db";
 
 interface <%= PascalPluralModelName %>PageProps {
   <%= pluralModelName %>: <%= modelName %>[];
+  tables: Record<string, string>;
 }
 
-const <%= PascalPluralModelName %>Page = ({ <%= pluralModelName %> }: <%= PascalPluralModelName %>PageProps) => {
+const <%= PascalPluralModelName %>Page = ({ <%= pluralModelName %>, tables }: <%= PascalPluralModelName %>PageProps) => {
   const fieldData = <%= pluralModelName %>.map(<%= singularModelName %> => (
     <tr key={<%= singularModelName %>.id}>
       <% fields.forEach(field => { %>
@@ -26,48 +29,75 @@ const <%= PascalPluralModelName %>Page = ({ <%= pluralModelName %> }: <%= Pascal
   ));
 
   return (
-    <main className="container mx-auto mt-28 px-5 flex min-h-screen">
-      <div className="w-full">
-        <div className="flex justify-between items-center">
-          <h1 className="font-bold text-4xl"><%= PascalPluralModelName %></h1>
-          <Link href="/<%= pluralModelName %>/new" className="rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium">New <%= singularModelName %></Link>
+    <div className="flex flex-col min-h-screen">
+      <nav className="flex items-center space-x-4 lg:space-x-6 m-6">
+        <Link href="/" className="text-sm font-medium transition-colors hover:text-primary">
+            home
+        </Link>
+        {Object.keys(tables).map((table) => (
+          <Link href={`/${table}`} key={table} className="text-sm font-medium transition-colors hover:text-primary">
+              {table}
+          </Link>
+        ))}
+      </nav>
+      <main className="container mx-auto px-5 flex min-h-screen">
+        <div className="w-full">
+          <div className="flex justify-between items-center">
+            <h1 className="font-bold text-4xl"><%= PascalPluralModelName %></h1>
+            <Link href="/<%= pluralModelName %>/new" className="rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium">New <%= singularModelName %></Link>
+          </div>
+        
+          <div id="<%= pluralModelName %>" className="min-w-full">
+            <table className="min-w-full divide-y divide-gray-300">
+              <thead className="bg-gray-50">
+                <tr>
+                  <% fields.forEach(field => { %>
+                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                      <%= modelMetadata[field].label %>
+                    </th>
+                  <% }) %>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200 bg-white">
+                {fieldData}
+              </tbody>
+            </table>
+          </div>
         </div>
-      
-        <div id="<%= pluralModelName %>" className="min-w-full">
-          <table className="min-w-full divide-y divide-gray-300">
-            <thead className="bg-gray-50">
-              <tr>
-                <% fields.forEach(field => { %>
-                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                    <%= modelMetadata[field].label %>
-                  </th>
-                <% }) %>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
-              {fieldData}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </main>
+      </main>
+    </div>
   );
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const knex = getKnex();
-  const <%= pluralModelName %>FromKnex = await knex("<%= singularModelName %>s");
-  const <%= pluralModelName %> = <%= pluralModelName %>FromKnex.map((<%= singularModelName %>: <%= modelName %>) => ({
-    ...<%= singularModelName %>,
-    created_at: <%= singularModelName %>.created_at?.toISOString(),
-    updated_at: <%= singularModelName %>.updated_at?.toISOString(),
-  }));
+  try {
+    const knex = getKnex();
+    const <%= pluralModelName %>FromKnex = await knex("<%= singularModelName %>s");
+    const <%= pluralModelName %> = <%= pluralModelName %>FromKnex.map((<%= singularModelName %>: <%= modelName %>) => ({
+      ...<%= singularModelName %>,
+      created_at: <%= singularModelName %>.created_at?.toISOString(),
+      updated_at: <%= singularModelName %>.updated_at?.toISOString(),
+    }));
 
-  return {
-    props: {
-      <%= pluralModelName %>,
-    },
-  };
+    const filePath = path.join(process.cwd(), 'src/db/schema.json');
+    const fileContent = fs.readFileSync(filePath, 'utf8');
+    const tables = JSON.parse(fileContent);
+
+    return {
+      props: {
+        <%= pluralModelName %>,
+        tables,
+      },
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      props: {
+        <%= pluralModelName %>: [],
+        tables: {},
+      },
+    };
+  }
 };
 
 export default <%= PascalPluralModelName %>Page;

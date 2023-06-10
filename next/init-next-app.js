@@ -14,7 +14,7 @@ const initNextApp = (appDir) => {
   }
 
   // TODO: Add support for passing in arguments to create-next-app, for now it's whatever is in defaultArguments
-  const defaultArguments = ['--ts', '--eslint', '--no-app', '--use-npm', '--src-dir', '--import-alias "@deps/*"', '--tailwind'];
+  const defaultArguments = ['--ts', '--eslint', '--no-app', '--use-npm', '--src-dir', '--import-alias "@/*"', '--tailwind'];
 
   // Run create-next-app with the arguments passed in from the command line and defaultArguments
   const initCommand = `npx --no-install create-next-app ${appDir} ${defaultArguments.join(' ')}`;

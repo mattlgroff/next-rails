@@ -12,6 +12,7 @@ A CLI for generating a Next.js app with Rails CLI-like features.
 - TypeScript ✅
 - ESLint ✅
 - Tailwind CSS ✅
+- [Shadcn UI compatible out of the box](https://ui.shadcn.com/docs/components) ✅
 - Knex ✅
 - PostgreSQL w/ PgVector ✅
 - Prettier ✅
@@ -183,3 +184,23 @@ next build && npx next-rails db:migrate
 ```
 
 This will make sure whenever you make a new push to `main` or `master`, your migrations will be run automatically when Vercel builds your app.
+
+## Adding shadcn components
+If you want to add shadcn components to your project, you can do so by running the following command:
+```bash
+npx shadcdn-ui add component-name
+```
+
+You'll see a prompt asking where you would like to install your components and if you follow our recommend path with `next-rails` it would be `src/components` like so:
+```bash
+$ npx shadcn-ui add navigation-menu
+Running the following command will overwrite existing files.
+Make sure you have committed your changes before proceeding.
+
+✔ Where would you like to install the component(s)? … src/components
+✔ Creating src/components...
+Installing 1 component(s) and dependencies...
+✔ Navigation Menu
+```
+
+You can find a [list of all of the shadcn components here](https://ui.shadcn.com/docs/components). Our project is not endorsed or related to by shadcn, we just like their components and follow their convention to remain shadcn CLI compatible.

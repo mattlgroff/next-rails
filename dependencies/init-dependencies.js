@@ -6,7 +6,8 @@ const initDependencies = (appPath) => {
   console.log('🚀 Installing additional dependencies...');
 
   // Install knex and PostgreSQL driver packages.
-  const installCommand = 'npm install --save knex pg';
+  const installCommand =
+    'npm install --save knex pg tailwindcss-animate class-variance-authority clsx tailwind-merge lucide-react';
   execSync(installCommand, { cwd: appPath, stdio: 'inherit' });
 
   // Install Prettier, ESLint, Lint Staged, and Husky packages.
@@ -52,10 +53,26 @@ const initDependencies = (appPath) => {
   const destKnexIndexPath = join(knexDirPath, 'index.js');
   copyFileSync(srcKnexIndexPath, destKnexIndexPath);
 
+  console.log('🎨 Copying over the Tailwind Config...');
+  const srcTailwindConfigPath = resolve(__dirname, './files-to-copy/tailwind.config.js');
+  const destTailwindConfigPath = join(appPath, 'tailwind.config.js');
+  copyFileSync(srcTailwindConfigPath, destTailwindConfigPath);
+
   console.log('🖌️ Copying over the globals.css default for TailwindCSS...');
   const srcGlobalsCssPath = resolve(__dirname, './files-to-copy/globals.css');
   const destGlobalsCssPath = join(appPath, 'src/styles/globals.css');
   copyFileSync(srcGlobalsCssPath, destGlobalsCssPath);
+
+  // Create src/lib/utils.ts
+  console.log('📋 Copying over the utils.ts...');
+  const srcUtilsPath = resolve(__dirname, './files-to-copy/utils.ts');
+
+  // Make sure the src/lib directory exists
+  const srcLibDirPath = join(appPath, 'src/lib');
+  execSync(`mkdir -p ${srcLibDirPath}`, { stdio: 'inherit' });
+
+  const destUtilsPath = join(appPath, 'src/lib/utils.ts');
+  copyFileSync(srcUtilsPath, destUtilsPath);
 
   console.log('🚂 Done! Consider running `next-rails generate scaffold` to generate your first model.`');
 };

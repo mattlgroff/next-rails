@@ -15,8 +15,8 @@ describe('generateCreateControllerCode', () => {
 
     // Expect we import the types and getKnex
     expect(result).toContain(`import type { NextApiRequest, NextApiResponse } from 'next';`);
-    expect(result).toContain(`import { getKnex } from '@deps/db';`);
-    expect(result).toContain(`import { ${capitalizedSingularModelName} } from '@deps/db/models/${singularModelName}';`);
+    expect(result).toContain(`import { getKnex } from '@/db';`);
+    expect(result).toContain(`import { ${capitalizedSingularModelName} } from '@/db/models/${singularModelName}';`);
 
     // Expect we define the ResponseType
     expect(result).toContain(`type ResponseType = ${capitalizedSingularModelName} | { message: string };`);
@@ -40,8 +40,8 @@ describe('generateUpdateControllerCode', () => {
 
     // Expect we import the types and getKnex
     expect(result).toContain(`import type { NextApiRequest, NextApiResponse } from 'next';`);
-    expect(result).toContain(`import { getKnex } from '@deps/db';`);
-    expect(result).toContain(`import { ${capitalizedSingularModelName} } from '@deps/db/models/${singularModelName}';`);
+    expect(result).toContain(`import { getKnex } from '@/db';`);
+    expect(result).toContain(`import { ${capitalizedSingularModelName} } from '@/db/models/${singularModelName}';`);
 
     // Expect we define the ResponseType
     expect(result).toContain(`type ResponseType = ${capitalizedSingularModelName} | { message: string };`);
@@ -70,7 +70,7 @@ describe('generateDestroyControllerCode', () => {
 
     // Expect we import the types and getKnex
     expect(result).toContain(`import type { NextApiRequest, NextApiResponse } from 'next';`);
-    expect(result).toContain(`import { getKnex } from '@deps/db';`);
+    expect(result).toContain(`import { getKnex } from '@/db';`);
 
     // Expect we define the ResponseType
     expect(result).toContain(`type ResponseType = { success: boolean, message: string };`);
@@ -98,8 +98,8 @@ describe('generateShowControllerCode', () => {
 
     // Expect we import the types and getKnex
     expect(result).toContain(`import type { NextApiRequest, NextApiResponse } from 'next';`);
-    expect(result).toContain(`import { getKnex } from '@deps/db';`);
-    expect(result).toContain(`import { ${capitalizedSingularModelName} } from '@deps/db/models/${singularModelName}';`);
+    expect(result).toContain(`import { getKnex } from '@/db';`);
+    expect(result).toContain(`import { ${capitalizedSingularModelName} } from '@/db/models/${singularModelName}';`);
 
     // Expect we define the ResponseType
     expect(result).toContain(`type ResponseType = ${capitalizedSingularModelName} | { message: string };`);
@@ -130,8 +130,8 @@ describe('generateIndexControllerCode', () => {
 
     // Expect we import the types and getKnex
     expect(result).toContain(`import type { NextApiRequest, NextApiResponse } from 'next';`);
-    expect(result).toContain(`import { getKnex } from '@deps/db';`);
-    expect(result).toContain(`import { ${capitalizedSingularModelName} } from '@deps/db/models/${singularModelName}';`);
+    expect(result).toContain(`import { getKnex } from '@/db';`);
+    expect(result).toContain(`import { ${capitalizedSingularModelName} } from '@/db/models/${singularModelName}';`);
 
     // Expect we define the ResponseType
     expect(result).toContain(`type ResponseType = ${capitalizedSingularModelName}[] | { message: string };`);

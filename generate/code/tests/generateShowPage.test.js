@@ -15,9 +15,9 @@ describe.skip('generateShowPage', () => {
 
     const expectedOutputStart = `
     import { GetServerSideProps } from "next";
-    import { Todo, todoMetadata as modelMetadata } from "@deps/db/models/todo";
+    import { Todo, todoMetadata as modelMetadata } from "@/db/models/todo";
     import Link from "next/link";
-    import { getKnex } from "@deps/db";
+    import { getKnex } from "@/db";
     import { useRouter } from 'next/router';
     
     interface ShowTodoPageProps {
@@ -69,9 +69,9 @@ describe.skip('generateShowPage', () => {
 
     const expectedOutputStart = `
     import { GetServerSideProps } from "next";
-    import { User, userMetadata as modelMetadata } from "@deps/db/models/user";
+    import { User, userMetadata as modelMetadata } from "@/db/models/user";
     import Link from "next/link";
-    import { getKnex } from "@deps/db";
+    import { getKnex } from "@/db";
     import { useRouter } from 'next/router';
     
     interface ShowUserPageProps {

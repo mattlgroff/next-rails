@@ -14,16 +14,19 @@ describe('generateIndexPage', () => {
     const output = formatString(await generateIndexPage(singularModelName, pluralModelName, options));
 
     const expectedOutputStart = `
+    import fs from 'fs';
+    import path from 'path';
     import { GetServerSideProps } from "next";
-    import { Todo, todoMetadata as modelMetadata } from "@deps/db/models/todo";
+    import { Todo, todoMetadata as modelMetadata } from "@/db/models/todo";
     import Link from "next/link";
-    import { getKnex } from "@deps/db";
+    import { getKnex } from "@/db";
     
     interface TodosPageProps {
       todos: Todo[];
+      tables: Record<string, string>;
     }
     
-    const TodosPage = ({ todos }: TodosPageProps) => {
+    const TodosPage = ({ todos, tables }: TodosPageProps) => {
     `;
 
     // Check that the output begins with the expected string
@@ -31,19 +34,34 @@ describe('generateIndexPage', () => {
 
     const expectedOutputEnd = `
     export const getServerSideProps: GetServerSideProps = async () => {
-      const knex = getKnex();
-      const todosFromKnex = await knex("todos");
-      const todos = todosFromKnex.map((todo: Todo) => ({
-        ...todo,
-        created_at: todo.created_at?.toISOString(),
-        updated_at: todo.updated_at?.toISOString(),
-      }));
-    
-      return {
-        props: {
-          todos,
-        },
-      };
+      try {
+        const knex = getKnex();
+        const todosFromKnex = await knex("todos");
+        const todos = todosFromKnex.map((todo: Todo) => ({
+          ...todo,
+          created_at: todo.created_at?.toISOString(),
+          updated_at: todo.updated_at?.toISOString(),
+        }));
+
+        const filePath = path.join(process.cwd(), 'src/db/schema.json');
+        const fileContent = fs.readFileSync(filePath, 'utf8');
+        const tables = JSON.parse(fileContent);    
+      
+        return {
+          props: {
+            todos,
+            tables,
+          },
+        };
+      } catch (error) {
+        console.error(error);
+        return {
+          props: {
+            todos: [],
+            tables: {},
+          },
+        };
+      }
     };
     
     export default TodosPage;
@@ -61,9 +79,9 @@ describe('generateIndexPage', () => {
 
     const expectedOutputStart = `
     import { GetServerSideProps } from "next";
-    import { User, userMetadata as modelMetadata } from "@deps/db/models/user";
+    import { User, userMetadata as modelMetadata } from "@/db/models/user";
     import Link from "next/link";
-    import { getKnex } from "@deps/db";
+    import { getKnex } from "@/db";
     
     interface UsersPageProps {
       users: User[];

@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getKnex } from '@deps/db';
-import { <%= capitalizedSingularModelName %> } from '@deps/db/models/<%= singularModelName %>';
+import { getKnex } from '@/db';
+import { <%= capitalizedSingularModelName %> } from '@/db/models/<%= singularModelName %>';
 
 const knex = getKnex();
 

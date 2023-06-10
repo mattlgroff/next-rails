@@ -29,7 +29,7 @@ describe('generateMigrationCode', () => {
     const result = formatString(await generateMigrationCode(pluralModelName, options));
 
     // Expected output
-    const expectedOutput = `exports.up = function (knex, Promise) { return knex.schema.raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";').createTable('todos', function (table) { table.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()')); table.string('title').notNullable(); table.boolean('is_completed').defaultTo(false); table.timestamp('created_at').defaultTo(knex.fn.now()); table.timestamp('updated_at').defaultTo(knex.fn.now()); }); }; exports.down = function (knex, Promise) { return knex.schema.dropTable('todos'); };`;
+    const expectedOutput = `exports.up = function (knex) { return knex.schema.raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";').createTable('todos', function (table) { table.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()')); table.string('title').notNullable(); table.boolean('is_completed').defaultTo(false); table.timestamp('created_at').defaultTo(knex.fn.now()); table.timestamp('updated_at').defaultTo(knex.fn.now()); }); }; exports.down = function (knex) { return knex.schema.dropTable('todos'); };`;
 
     // Expect we get this exact migration for todos as requested
     expect(result).toBe(expectedOutput);
