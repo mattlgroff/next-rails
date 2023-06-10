@@ -203,4 +203,4 @@ Installing 1 component(s) and dependencies...
 ✔ Navigation Menu
 ```
 
-You can find a [list of all of the shadcn components here](https://ui.shadcn.com/docs/components). Our project is not endorsed or related to by shadcn, we just like their components and follow their convention to remain shadcn CLI compatible.
+You can find a [list of all of the shadcn components here](https://ui.shadcn.com/docs/components). Our project is not endorsed by or related to shadcn, we just like their components and follow their convention to remain shadcn CLI compatible.
