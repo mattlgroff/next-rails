@@ -29,6 +29,7 @@ describe('generateIndexPage', () => {
     const TodosPage = ({ todos, tables }: TodosPageProps) => {
     `;
 
+
     // Check that the output begins with the expected string
     expect(output.startsWith(formatString(expectedOutputStart))).toBe(true);
 
@@ -78,6 +79,8 @@ describe('generateIndexPage', () => {
     const output = formatString(await generateIndexPage(singularModelName, pluralModelName, options));
 
     const expectedOutputStart = `
+    import fs from 'fs';
+    import path from 'path';
     import { GetServerSideProps } from "next";
     import { User, userMetadata as modelMetadata } from "@/db/models/user";
     import Link from "next/link";
@@ -85,9 +88,10 @@ describe('generateIndexPage', () => {
     
     interface UsersPageProps {
       users: User[];
+      tables: Record<string, string>;
     }
     
-    const UsersPage = ({ users }: UsersPageProps) => {
+    const UsersPage = ({ users, tables }: UsersPageProps) => {
     `;
 
     // Check that the output begins with the expected string
@@ -95,19 +99,34 @@ describe('generateIndexPage', () => {
 
     const expectedOutputEnd = `
     export const getServerSideProps: GetServerSideProps = async () => {
-      const knex = getKnex();
-      const usersFromKnex = await knex("users");
-      const users = usersFromKnex.map((user: User) => ({
-        ...user,
-        created_at: user.created_at?.toISOString(),
-        updated_at: user.updated_at?.toISOString(),
-      }));
-    
-      return {
-        props: {
-          users,
-        },
-      };
+      try {
+        const knex = getKnex();
+        const usersFromKnex = await knex("users");
+        const users = usersFromKnex.map((user: User) => ({
+          ...user,
+          created_at: user.created_at?.toISOString(),
+          updated_at: user.updated_at?.toISOString(),
+        }));
+
+        const filePath = path.join(process.cwd(), 'src/db/schema.json');
+        const fileContent = fs.readFileSync(filePath, 'utf8');
+        const tables = JSON.parse(fileContent);    
+      
+        return {
+          props: {
+            users,
+            tables,
+          },
+        };
+      } catch (error) {
+        console.error(error);
+        return {
+          props: {
+            users: [],
+            tables: {},
+          },
+        };
+      }
     };
     
     export default UsersPage;
