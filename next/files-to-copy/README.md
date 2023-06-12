@@ -87,7 +87,7 @@ next-rails new [options] <app-name>
 Creates a new Next.js app using the [create-next-app](https://www.npmjs.com/package/create-next-app) package with some default options. Currently the following options are set:
 
 ```bash
-create-next-app --ts --eslint --no-app --use-npm --src-dir --import-alias "@deps/*" --tailwind
+create-next-app --ts --eslint --no-app --use-npm --src-dir --import-alias "@/*" --tailwind
 ```
 
 ### `generate` ✅
@@ -101,16 +101,25 @@ next-rails generate model <model-name> [options]
 Generates a new TypeScript interface representing a model with the given name and options. Note that for the model name, the singular form should be provided (ex: "Post" or "Todo"). This model interface will be created in the src/db/models directory. Each option should be a string in the format 'name:type'. The following types are currently supported:
 
 - string
-- integer
-- boolean
-- date
 - text
-- vector
+- integer
+- float
+- decimal
+- datetime (some known issues with editing the form item)
+- timestamp (some known issues with editing the form item)
+- time (some known issues with editing the form item)
+- date (some known issues with editing the form item)
+- binary (untested)
+- boolean (some known issues with editing the form item)
+- vector (pgvector only)
 - references
+- belongs_to
+
+NOTE: Some of these may not have been fully vetted yet. Please open an issue if you find any bugs. If anything, it'll probably be the knex migration that needs to be mapped or the input html type.
 
 The model interface will be created with the following default fields in addition to the fields specified by the options:
 
-- id - string - Represents a UUID.
+- id - integer OR string - Represents an integer OR uuid. (See the note above about the primary key type.)
 - createdAt - Date - Represents the timestamp when the record was created.
 - updatedAt - Date - Represents the timestamp when the record was last updated.
 
