@@ -45,7 +45,11 @@ const Edit<%= PascalSingularModelName %>Page = ({ <%= singularModelName %> }: Ed
                 return (
                   <div key={key} className="my-5">
                     <label className="block text-gray-700 font-bold mb-2">{modelMetadata[key].label}</label>
-                    <input name={key} type={modelMetadata[key].inputType} defaultValue={<%= singularModelName %>[key]} className="block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" />
+                    {modelMetadata[key].inputType === 'checkbox' ? (
+                      <input name={key} type={modelMetadata[key].inputType} checked={<%= singularModelName %>[key] as boolean} className="block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" />
+                    ) : (
+                      <input name={key} type={modelMetadata[key].inputType} defaultValue={<%= singularModelName %>[key] as string} className="block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" />
+                    )}                
                   </div>
                 )
               }

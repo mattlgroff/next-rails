@@ -86,7 +86,7 @@ const New<%= PascalSingularModelName %>Page = () => {
                   return (
                     <div key={key} className="my-5">
                       <label className="block text-gray-700 font-bold mb-2">{modelMetadata[key].label}</label>
-                      <input type="checkbox" className="h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500" />
+                      <input name={key} type="checkbox" className="h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500" />
                     </div>
                   )
                 }
@@ -95,7 +95,7 @@ const New<%= PascalSingularModelName %>Page = () => {
                   return (
                     <div key={key} className="my-5">
                       <label className="block text-gray-700 font-bold mb-2">{modelMetadata[key].label}</label>
-                      <input type="date" className="block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" />
+                      <input name={key} type="date" className="block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" />
                     </div>
                   )
                 }
