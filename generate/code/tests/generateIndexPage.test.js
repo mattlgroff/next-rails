@@ -11,7 +11,9 @@ describe('generateIndexPage', () => {
     const singularModelName = 'todo';
     const pluralModelName = 'todos';
     const options = ['title:string', 'is_completed:boolean'];
-    const output = formatString(await generateIndexPage(singularModelName, pluralModelName, options));
+    const dbType = 'pg';
+    const primaryKeyType = 'uuid';
+    const output = formatString(await generateIndexPage(singularModelName, pluralModelName, options, dbType, primaryKeyType));
 
     const expectedOutputStart = `
     import fs from 'fs';
@@ -76,7 +78,9 @@ describe('generateIndexPage', () => {
     const singularModelName = 'user';
     const pluralModelName = 'users';
     const options = ['name:string', 'email:string', 'is_active:boolean'];
-    const output = formatString(await generateIndexPage(singularModelName, pluralModelName, options));
+    const dbType = 'pg';
+    const primaryKeyType = 'uuid';
+    const output = formatString(await generateIndexPage(singularModelName, pluralModelName, options, dbType, primaryKeyType));
 
     const expectedOutputStart = `
     import fs from 'fs';

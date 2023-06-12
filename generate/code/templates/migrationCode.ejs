@@ -1,5 +1,5 @@
 exports.up = function (knex) {
-  return knex.schema.raw('<%- extensionsToInstall %>').createTable('<%= pluralModelName %>', function (table) {
+  <%- firstLineOfMigration %>
     <% if (primaryKeyType === 'uuid') { %>
     table.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()'));
     <% } else { %>
@@ -15,10 +15,12 @@ exports.up = function (knex) {
          <% } 
        } 
        if (type === 'vector') { %>
-         table.specificType('<%= name %>', 'vector(1536)');
-       <% } else { %>
-         table.<%= typeMapping[type].db_column %>('<%= name %>');
-       <% } 
+           table.specificType('<%= name %>', 'vector(1536)');
+         <% } else if (type === 'string') { %>
+           table.string('<%= name %>');
+         <% } else { %>
+           table.<%= typeMapping[type].db_column %>('<%= name %>');
+         <% } 
     }); %>
     <% [...references, ...belongsTo].forEach((ref) => { 
        if (primaryKeyType === 'uuid') { %>

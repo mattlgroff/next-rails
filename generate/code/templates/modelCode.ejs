@@ -8,7 +8,7 @@ export interface <%- modelName %> {
 }
 
 export interface <%- modelName %>Metadata {
-  id: { label: <%- idType %>; };
+  id: { label: string; };
   <% options.forEach((option) => { const [name, type] = option.split(':'); %><%- name %>: { label: string; inputType: string; }; <% }); -%>
   created_at: { label: string; };
   updated_at: { label: string; };

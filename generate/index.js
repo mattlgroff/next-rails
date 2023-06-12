@@ -110,7 +110,7 @@ function generateScaffold(modelName, options) {
 
   // Generate views
   const indexPath = path.join(process.cwd(), 'src/pages', pluralModelName, 'index.tsx');
-  generateIndexPage(singularModelName, pluralModelName, options)
+  generateIndexPage(singularModelName, pluralModelName, options, dbType, primaryKeyType)
     .then((result) => {
       writeStringToFile(result, indexPath);
     })

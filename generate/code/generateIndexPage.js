@@ -1,7 +1,8 @@
 const ejs = require('ejs');
 const path = require('path');
+const { generateTypeMapping } = require('../../utils');
 
-function generateIndexPage(singularModelName, pluralModelName, options) {
+function generateIndexPage(singularModelName, pluralModelName, options, dbType = 'pg', primaryKeyType = 'integer') {
   const modelName = singularModelName.charAt(0).toUpperCase() + singularModelName.slice(1);
   const PascalPluralModelName = pluralModelName.charAt(0).toUpperCase() + pluralModelName.slice(1);
 
@@ -12,15 +13,17 @@ function generateIndexPage(singularModelName, pluralModelName, options) {
 
   // Construct the model metadata
   const modelMetadata = {
-    id: { label: 'ID', display: (value) => value },
+    id: { label: 'ID' },
   };
+
+  const typeMapping = generateTypeMapping(dbType, primaryKeyType);
 
   // Replace foreignModelName:references with foreignModelName_id:string
   options = options.map((option) => {
     const [name, type] = option.split(':');
 
-    if (type === 'references') {
-      return `${name}_id:string`;
+    if (type === 'references' || type === 'belongs_to') {
+      return `${name}_id:${typeMapping.references.db_column}`;
     }
 
     return option;

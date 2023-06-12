@@ -19,6 +19,14 @@ function generateMigrationCode(pluralModelName, options, dbType = 'pg', primaryK
     extensionsToInstall = `${extensionsToInstall} CREATE EXTENSION IF NOT EXISTS "vector";`;
   }
 
+  // Generate the first line of the migration
+  let firstLineOfMigration = '';
+  if (extensionsToInstall) {
+    firstLineOfMigration = `return knex.schema.raw('${extensionsToInstall}').createTable('${pluralModelName}', function (table) {`;
+  } else {
+    firstLineOfMigration = `return knex.schema.createTable('${pluralModelName}', function (table) {`;
+  }
+
   // Extract all references to other models
   const references = options
     .filter((option) => option.split(':')[1] === 'references')
@@ -45,7 +53,7 @@ function generateMigrationCode(pluralModelName, options, dbType = 'pg', primaryK
     pluralModelName,
     options,
     typeMapping,
-    extensionsToInstall,
+    firstLineOfMigration,
     belongsTo,
     references,
     primaryKeyType,
