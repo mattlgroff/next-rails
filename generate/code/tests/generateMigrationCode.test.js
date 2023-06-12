@@ -6,10 +6,12 @@ const formatString = (str) => {
 };
 
 describe('generateMigrationCode', () => {
-  it('should generate correct migration code', async () => {
+  it('should generate correct migration code with references', async () => {
     const pluralModelName = 'users';
     const options = ['name:string', 'age:integer', 'isActive:boolean', 'embedding:vector' , 'user:references'];
-    const result = formatString(await generateMigrationCode(pluralModelName, options));
+    const dbType = 'pg';
+    const primaryKeyType = 'uuid';
+    const result = formatString(await generateMigrationCode(pluralModelName, options, dbType, primaryKeyType));
 
     // Add your assertions here
     expect(result).toContain(
@@ -23,15 +25,26 @@ describe('generateMigrationCode', () => {
     expect(result).toContain(`knex.schema.dropTable('${pluralModelName}');`);
   });
 
-  it('should generate correct migration code for todos', async () => {
-    const pluralModelName = 'todos';
-    const options = ['title:string', 'is_completed:boolean'];
-    const result = formatString(await generateMigrationCode(pluralModelName, options));
+  it('should generate correct migration code with belongsTo', async () => {
+    const pluralModelName = 'posts';
+    const options = ['title:string', 'content:text', 'user:belongsTo'];
+    const dbType = 'pg';
+    const primaryKeyType = 'uuid';
+    const result = formatString(await generateMigrationCode(pluralModelName, options, dbType, primaryKeyType));
 
-    // Expected output
-    const expectedOutput = `exports.up = function (knex) { return knex.schema.raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";').createTable('todos', function (table) { table.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()')); table.string('title').notNullable(); table.boolean('is_completed').defaultTo(false); table.timestamp('created_at').defaultTo(knex.fn.now()); table.timestamp('updated_at').defaultTo(knex.fn.now()); }); }; exports.down = function (knex) { return knex.schema.dropTable('todos'); };`;
+    expect(result).toContain(`table.uuid('user_id');`);
+    expect(result).toContain(`table.foreign('user_id').references('id').inTable('users');`);
+  });
 
-    // Expect we get this exact migration for todos as requested
-    expect(result).toBe(expectedOutput);
+  it('should generate correct migration code with integer primary key', async () => {
+    const pluralModelName = 'comments';
+    const options = ['content:text', 'post:belongsTo'];
+    const dbType = 'pg';
+    const primaryKeyType = 'integer';
+    const result = formatString(await generateMigrationCode(pluralModelName, options, dbType, primaryKeyType));
+
+    expect(result).toContain(`table.increments('id');`);
+    expect(result).toContain(`table.integer('post_id');`);
+    expect(result).toContain(`table.foreign('post_id').references('id').inTable('posts');`);
   });
 });

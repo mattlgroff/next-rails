@@ -2,10 +2,11 @@ const { join, resolve } = require('path');
 const { execSync } = require('child_process');
 const { copyFileSync } = require('fs');
 
-const initDependencies = (appPath) => {
+// eslint-disable-next-line no-unused-vars
+const initDependencies = (appPath, dbType = 'pg', primaryKeyType = 'integer') => {
   console.log('🚀 Installing additional dependencies...');
 
-  // Install knex and PostgreSQL driver packages.
+  // Install knex and PostgreSQL driver packages. # TODO: Add support for other dbTypes
   const installCommand =
     'npm install --save knex pg tailwindcss-animate class-variance-authority clsx tailwind-merge lucide-react';
   execSync(installCommand, { cwd: appPath, stdio: 'inherit' });
@@ -27,6 +28,7 @@ const initDependencies = (appPath) => {
   const destPrettierConfigPath = join(appPath, '.prettierrc.js');
   copyFileSync(srcPrettierConfigPath, destPrettierConfigPath);
 
+  // TODO: Make sure this works with other dbTypes besides postgres (pg)
   console.log('⚙️ Copying over the Knex configuration...');
   const srcKnexConfigPath = resolve(__dirname, './files-to-copy/knexfile.js');
   const destKnexConfigPath = join(appPath, 'knexfile.js');
@@ -63,11 +65,9 @@ const initDependencies = (appPath) => {
   const destGlobalsCssPath = join(appPath, 'src/styles/globals.css');
   copyFileSync(srcGlobalsCssPath, destGlobalsCssPath);
 
-  // Create src/lib/utils.ts
-  console.log('📋 Copying over the utils.ts...');
+  console.log('📋 Copying over the utils.ts for shadcn...');
   const srcUtilsPath = resolve(__dirname, './files-to-copy/utils.ts');
 
-  // Make sure the src/lib directory exists
   const srcLibDirPath = join(appPath, 'src/lib');
   execSync(`mkdir -p ${srcLibDirPath}`, { stdio: 'inherit' });
 

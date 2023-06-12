@@ -1,17 +1,8 @@
 export interface <%- modelName %> {
-  id: string;<% options.forEach((option) => { 
+  id: <%- idType %>;<% options.forEach((option) => { 
     const [name, type] = option.split(':');
-    let mappedType;
-    switch(type) {
-      case 'text':
-        mappedType = 'string';
-        break;
-      default:
-        mappedType = typeMapping[type];
-        break;
-    }
   -%>
-  <%- name %>: <%- mappedType %>;<% }); -%>
+  <%- name %>: <%- typeMapping[type].ts %>;<% }); -%>
   created_at: Date;
   updated_at: Date;
 }

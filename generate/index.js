@@ -14,7 +14,7 @@ const {
 const generateShowPage = require('./code/generateShowPage');
 const generateNewPage = require('./code/generateNewPage');
 const generateEditPage = require('./code/generateEditPage');
-const { writeStringToFile, generateCurrentTimestamp } = require('../utils');
+const { writeStringToFile, generateCurrentTimestamp, getNextRailsConfig } = require('../utils');
 
 function generateModel(modelName, options) {
   const singularModelName = modelName.toLowerCase();
@@ -22,7 +22,10 @@ function generateModel(modelName, options) {
   // Generate model (src/db/models/${singularModelName}.ts) - Has the Typescript interface for the model
   const modelPath = path.join(process.cwd(), 'src/db/models', `${singularModelName}.ts`);
 
-  generateModelCode(singularModelName, options)
+  // Get the dbType and primaryKeyType from next-rails.config.json
+  const { dbType, primaryKeyType } = getNextRailsConfig();
+
+  generateModelCode(singularModelName, options, dbType, primaryKeyType)
     .then((result) => {
       writeStringToFile(result, modelPath);
     })
@@ -34,6 +37,9 @@ function generateModel(modelName, options) {
 function generateScaffold(modelName, options) {
   const singularModelName = modelName.toLowerCase();
   const pluralModelName = pluralize(singularModelName); // Using the pluralize package to pluralize the model name
+
+  // Get the dbType and primaryKeyType from next-rails.config.json
+  const { dbType, primaryKeyType } = getNextRailsConfig();
 
   // Generate model (src/db/models/${singularModelName}.ts) - Has the Typescript interface for the model
   generateModel(modelName, options);
@@ -94,7 +100,7 @@ function generateScaffold(modelName, options) {
   const timestamp = generateCurrentTimestamp(); // Current timestamp in the format YYYYMMDDHHMMSS
   const migrationPath = path.join(process.cwd(), 'src/db/migrations', `${timestamp}_create_${pluralModelName}.js`);
 
-  generateMigrationCode(pluralModelName, options)
+  generateMigrationCode(pluralModelName, options, dbType, primaryKeyType)
     .then((result) => {
       writeStringToFile(result, migrationPath);
     })
@@ -104,7 +110,7 @@ function generateScaffold(modelName, options) {
 
   // Generate views
   const indexPath = path.join(process.cwd(), 'src/pages', pluralModelName, 'index.tsx');
-  generateIndexPage(singularModelName, pluralModelName, options)
+  generateIndexPage(singularModelName, pluralModelName, options, dbType, primaryKeyType)
     .then((result) => {
       writeStringToFile(result, indexPath);
     })
