@@ -5,9 +5,6 @@ const initNextApp = require('./next/init-next-app');
 const migrations = require('./knex/migrations');
 const seeds = require('./knex/seeds');
 const { generateScaffold, generateModel } = require('./generate');
-// TODO: require generate-model and generate-scaffold when they're ready
-// const generateModel = require('./generate-model');
-// const generateScaffold = require('./generate-scaffold');
 
 /*
   The hideBin helper removes the first two arguments of process.argv (which are the node executable and the path to your script).
@@ -21,15 +18,26 @@ const { generateScaffold, generateModel } = require('./generate');
 yargs(hideBin(process.argv))
   .command(
     'new <app-name>',
-    'create a new next app w/ Knex',
+    'create a new next app w/ next-rails. Pass in --primary-key-type uuid if you do not want auto incrementing integers',
     (yargs) => {
       yargs.positional('app-name', {
         describe: 'the name of the app to create',
         type: 'string',
+      })
+      .option('primary-key-type', {
+        describe: 'the type of the primary key (default is integer)',
+        type: 'string',
+        default: 'integer',
+        choices: ['integer', 'uuid']
+      })
+      .option('db-type', {
+        describe: 'the type of the database (default is pg for postgres)',
+        type: 'string',
+        default: 'pg'
       });
     },
     (argv) => {
-      initNextApp(argv.appName);
+      initNextApp(argv.appName, argv.dbType, argv.primaryKeyType);
     }
   )
   .command(

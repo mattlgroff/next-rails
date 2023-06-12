@@ -1,22 +1,33 @@
 exports.up = function (knex) {
   return knex.schema.raw('<%- extensionsToInstall %>').createTable('<%= pluralModelName %>', function (table) {
+    <% if (primaryKeyType === 'uuid') { %>
     table.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()'));
-    <% options.forEach((option) => { %>
-    <% const [name, type] = option.split(':'); %>
-    <% if(type === 'boolean') { %>
-    table.<%= typeMapping[type] %>('<%= name %>').defaultTo(false);
-    <% } else if (type === 'vector') { %>
-    table.specificType('<%= name %>', 'vector(1536)');
-    <% } else if (type === 'reference') { %>
-    table.uuid('<%= name %>_id').notNullable();
     <% } else { %>
-    table.<%= typeMapping[type] %>('<%= name %>').notNullable();
+    table.increments('id');
     <% } %>
-    <% }); %>
-    <% references.forEach((ref) => { %>
-      table.uuid('<%= ref[0] %>_id').notNullable();
-      table.foreign('<%= ref[0] %>_id').references('id').inTable('<%= ref[1] %>');
-      <% }); %>      
+    <% options.forEach((option) => { 
+       const [name, type] = option.split(':'); 
+       if (type === 'references' || type === 'belongsTo') { 
+         if (primaryKeyType === 'uuid') { %>
+           table.uuid('<%= name %>_id');
+         <% } else { %>
+           table.integer('<%= name %>_id');
+         <% } 
+       } 
+       if (type === 'vector') { %>
+         table.specificType('<%= name %>', 'vector(1536)');
+       <% } else { %>
+         table.<%= typeMapping[type].db_column %>('<%= name %>');
+       <% } 
+    }); %>
+    <% [...references, ...belongsTo].forEach((ref) => { 
+       if (primaryKeyType === 'uuid') { %>
+         table.uuid('<%= ref[0] %>_id');
+       <% } else { %>
+         table.integer('<%= ref[0] %>_id');
+       <% } %>
+       table.foreign('<%= ref[0] %>_id').references('id').inTable('<%= ref[1] %>');
+    <% }); %>      
     table.timestamp('created_at').defaultTo(knex.fn.now());
     table.timestamp('updated_at').defaultTo(knex.fn.now());
   });

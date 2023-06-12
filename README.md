@@ -53,7 +53,21 @@ next-rails [command] [options]
 next-rails new [options] <app-name>
 ```
 
-Creates a new Next.js app using the [create-next-app](https://www.npmjs.com/package/create-next-app) package with some default options. Currently the following options are set:
+---
+
+Important note: by default next-rails new will use PostgreSQL (currently the only supported DB) and the Primary Key Type will default to Auto-Incrementing Integer (`--primary-key-type integer`). If you want to use UUIDs as your primary key, you can pass the `--primary-key-type uuid` flag to the new command:
+  
+```bash
+next-rails new my-app --primary-key-type uuid
+```
+
+Whatever value you use will be added to a `next-rails.config.json` at the root of your new application folder. You can change this value at any time and it will be used for all future migrations and models, though I don't recommend switching after creating a project.
+
+---
+
+Creates a new Next.js app using the [create-next-app](https://www.npmjs.com/package/create-next-app) package with some default options. 
+
+Currently the following options are set for create-next-app:
 
 ```bash
 create-next-app --ts --eslint --no-app --use-npm --src-dir --import-alias "@deps/*" --tailwind

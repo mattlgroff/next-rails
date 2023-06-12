@@ -2,8 +2,9 @@ const { execSync } = require('child_process');
 const { join, resolve } = require('path');
 const { existsSync, copyFileSync } = require('fs');
 const initDependencies = require('../dependencies/init-dependencies');
+const { writeStringToFile } = require('../utils');
 
-const initNextApp = (appDir) => {
+const initNextApp = (appDir, dbType = 'pg', primaryKeyType = 'integer') => {
   // Get the full path of the directory
   const appPath = join(process.cwd(), appDir);
 
@@ -40,7 +41,7 @@ const initNextApp = (appDir) => {
   const destDockerfileNextjsPath = join(appPath, 'Dockerfile.nextjs');
   copyFileSync(srcDockerfileNextjsPath, destDockerfileNextjsPath);
 
-  // Copy Dockerfile.postgres
+  // Copy Dockerfile.postgres # TODO, change dockerfile and docker-compose based on dbType
   console.log('Copying over Dockerfile.postgres...');
   const srcDockerfilePostgresPath = resolve(__dirname, './files-to-copy/Dockerfile.postgres');
   const destDockerfilePostgresPath = join(appPath, 'Dockerfile.postgres');
@@ -58,8 +59,17 @@ const initNextApp = (appDir) => {
   const destIndexTsxPath = join(appPath, 'src/pages/index.tsx');
   copyFileSync(srcIndexTsxPath, destIndexTsxPath);
 
+  // Copy a next-rails.config.json file to the appPath, which saves our dbType and primaryKeyType
+  console.log('Creating a next-rails.config.json...');
+  const nextRailsConfig = {
+    dbType,
+    primaryKeyType,
+  };
+  const nextRailsConfigPath = join(appPath, 'next-rails.config.json');
+  writeStringToFile(JSON.stringify(nextRailsConfig, null, 2), nextRailsConfigPath);
+
   // After Next.js app creation and copying README.md, initialize additional dependencies (Sequelize, Prettier, etc).
-  initDependencies(appPath);
+  initDependencies(appPath, dbType, primaryKeyType);
 };
 
 module.exports = initNextApp;
