@@ -25,9 +25,9 @@ describe('generateMigrationCode', () => {
     expect(result).toContain(`knex.schema.dropTable('${pluralModelName}');`);
   });
 
-  it('should generate correct migration code with belongsTo', async () => {
+  it('should generate correct migration code with belongs_to', async () => {
     const pluralModelName = 'posts';
-    const options = ['title:string', 'content:text', 'user:belongsTo'];
+    const options = ['title:string', 'content:text', 'user:belongs_to'];
     const dbType = 'pg';
     const primaryKeyType = 'uuid';
     const result = formatString(await generateMigrationCode(pluralModelName, options, dbType, primaryKeyType));
@@ -38,7 +38,7 @@ describe('generateMigrationCode', () => {
 
   it('should generate correct migration code with integer primary key', async () => {
     const pluralModelName = 'comments';
-    const options = ['content:text', 'post:belongsTo'];
+    const options = ['content:text', 'post:belongs_to'];
     const dbType = 'pg';
     const primaryKeyType = 'integer';
     const result = formatString(await generateMigrationCode(pluralModelName, options, dbType, primaryKeyType));
@@ -47,4 +47,27 @@ describe('generateMigrationCode', () => {
     expect(result).toContain(`table.integer('post_id');`);
     expect(result).toContain(`table.foreign('post_id').references('id').inTable('posts');`);
   });
+
+  it('should generate correct migration code with CamelCase references', async () => {
+    const pluralModelName = 'userProfiles';
+    const options = ['firstName:string', 'lastName:string', 'MultipleWords:references'];
+    const dbType = 'pg';
+    const primaryKeyType = 'uuid';
+    const result = formatString(await generateMigrationCode(pluralModelName, options, dbType, primaryKeyType));
+  
+    expect(result).toContain(`table.uuid('multiple_words_id');`);
+    expect(result).toContain(`table.foreign('multiple_words_id').references('id').inTable('multiple_words');`);
+  });
+  
+  it('should generate correct migration code with snake_case references', async () => {
+    const pluralModelName = 'user_profiles';
+    const options = ['first_name:string', 'last_name:string', 'multiple_words:references'];
+    const dbType = 'pg';
+    const primaryKeyType = 'uuid';
+    const result = formatString(await generateMigrationCode(pluralModelName, options, dbType, primaryKeyType));
+  
+    expect(result).toContain(`table.uuid('multiple_words_id');`);
+    expect(result).toContain(`table.foreign('multiple_words_id').references('id').inTable('multiple_words');`);
+  });
+  
 });

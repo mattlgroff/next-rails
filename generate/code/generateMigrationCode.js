@@ -1,7 +1,7 @@
 const ejs = require('ejs');
 const path = require('path');
 const pluralize = require('pluralize');
-const { generateTypeMapping } = require('../../utils');
+const { generateTypeMapping, toSnakeCase } = require('../../utils');
 
 function generateMigrationCode(pluralModelName, options, dbType = 'pg', primaryKeyType = 'integer') {
   const hasVector = options.some((option) => option.split(':')[1] === 'vector');
@@ -31,21 +31,21 @@ function generateMigrationCode(pluralModelName, options, dbType = 'pg', primaryK
   const references = options
     .filter((option) => option.split(':')[1] === 'references')
     .map((option) => {
-      const singularName = option.split(':')[0];
+      const singularName = toSnakeCase(option.split(':')[0]);
       const pluralName = pluralize(singularName);
       return [singularName, pluralName];
     });
 
   const belongsTo = options
-    .filter((option) => option.split(':')[1] === 'belongsTo')
+    .filter((option) => option.split(':')[1] === 'belongs_to')
     .map((option) => {
-      const singularName = option.split(':')[0];
+      const singularName = toSnakeCase(option.split(':')[0]);
       const pluralName = pluralize(singularName);
       return [singularName, pluralName];
     });
 
   // Remove references from options, since we don't want to create any additional columns for them.
-  options = options.filter((option) => option.split(':')[1] !== 'references' && option.split(':')[1] !== 'belongsTo');
+  options = options.filter((option) => option.split(':')[1] !== 'references' && option.split(':')[1] !== 'belongs_to');
 
   const typeMapping = generateTypeMapping(dbType, primaryKeyType);
 

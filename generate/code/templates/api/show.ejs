@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getKnex } from '@/db';
-import { <%= capitalizedSingularModelName %> } from '@/db/models/<%= singularModelName %>';
+import { <%= pascalSingularModelName %> } from '@/db/models/<%= singularModelName %>';
 
 const knex = getKnex();
 
-type ResponseType = <%= capitalizedSingularModelName %> | { message: string };
+type ResponseType = <%= pascalSingularModelName %> | { message: string };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType>) {
   // Check if request method is GET
@@ -22,7 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
     // If the <%= singularModelName %> with the given id doesn't exist, we return an error
     if (!<%= singularModelName %>) {
-      return res.status(404).json({ message: `<%= capitalizedSingularModelName %> with id ${id} not found` });
+      return res.status(404).json({ message: `<%= pascalSingularModelName %> with id ${id} not found` });
     }
 
     // Everything went well

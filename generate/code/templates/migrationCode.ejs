@@ -7,7 +7,7 @@ exports.up = function (knex) {
     <% } %>
     <% options.forEach((option) => { 
        const [name, type] = option.split(':'); 
-       if (type === 'references' || type === 'belongsTo') { 
+       if (type === 'references' || type === 'belongs_to') { 
          if (primaryKeyType === 'uuid') { %>
            table.uuid('<%= name %>_id');
          <% } else { %>

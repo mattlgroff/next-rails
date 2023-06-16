@@ -38,11 +38,15 @@ function generateTypeMapping(dbType = 'pg', primaryKeyType = 'integer') {
   // Check if primaryKeyType is supported
   const supportedPrimaryKeyTypes = ['uuid', 'integer'];
   if (!supportedPrimaryKeyTypes.includes(primaryKeyType)) {
-    throw new Error(`primaryKeyType "${primaryKeyType}" is not supported. Supported primaryKeyTypes are: ${supportedPrimaryKeyTypes.join(', ')}`);
+    throw new Error(
+      `primaryKeyType "${primaryKeyType}" is not supported. Supported primaryKeyTypes are: ${supportedPrimaryKeyTypes.join(
+        ', '
+      )}`
+    );
   }
 
   // Generate type mapping
-  switch(dbType) {
+  switch (dbType) {
     case 'pg':
     default:
       return {
@@ -58,14 +62,20 @@ function generateTypeMapping(dbType = 'pg', primaryKeyType = 'integer') {
         binary: { ts: 'Buffer', db_column: 'bytea' },
         boolean: { ts: 'boolean', db_column: 'boolean' },
         vector: { ts: 'number[]', db_column: 'vector(1536)' }, // Supported only with PGVector extension
-        references: { ts: primaryKeyType === 'uuid' ? 'string' : 'number', db_column: primaryKeyType === 'uuid' ? 'uuid' : 'integer' },
-        belongs_to: { ts: primaryKeyType === 'uuid' ? 'string' : 'number', db_column: primaryKeyType === 'uuid' ? 'uuid' : 'integer' },
-      }
+        references: {
+          ts: primaryKeyType === 'uuid' ? 'string' : 'number',
+          db_column: primaryKeyType === 'uuid' ? 'uuid' : 'integer',
+        },
+        belongs_to: {
+          ts: primaryKeyType === 'uuid' ? 'string' : 'number',
+          db_column: primaryKeyType === 'uuid' ? 'uuid' : 'integer',
+        },
+      };
   }
 }
 
 function getNextRailsConfig() {
-  let dbType = 'pg';  // Default to pg, since that's what we're using for now.
+  let dbType = 'pg'; // Default to pg, since that's what we're using for now.
   let primaryKeyType = 'integer'; // Default to integer, since that's the Rails way.
 
   const nextRailsConfigPath = path.join(process.cwd(), 'next-rails.config.json');
@@ -81,7 +91,7 @@ function getNextRailsConfig() {
     console.log('Choices are: uuid, integer');
     primaryKeyType = readlineSync.question('primaryKeyType: ');
 
-    if(primaryKeyType !== 'uuid' && primaryKeyType !== 'integer') {
+    if (primaryKeyType !== 'uuid' && primaryKeyType !== 'integer') {
       console.error('primaryKeyType must be either uuid or integer.');
       process.exit(1);
     }
@@ -101,10 +111,45 @@ function getNextRailsConfig() {
   return { dbType, primaryKeyType };
 }
 
+function toCamelCase(str) {
+  return str.replace(/([-_][a-z])/g, (group) =>
+    group.toUpperCase().replace('-', '').replace('_', '')
+  );
+}
+
+function toPascalCase(str) {
+  // Split the string by non-alphanumeric characters (like underscores and spaces)
+  const words = str.split(/[\W_]/g);
+
+  // Capitalize the first character of each word and join them together
+  return words.map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join('');
+}
+
+// Helper function to convert snake_case to Title Case
+function toTitleCase(str) {
+  // Replace all non-word characters with spaces
+  str = str.replace(/[^a-zA-Z0-9 ]/g, ' ');
+
+  // Split on space and uppercase characters, then join with spaces
+  str = str
+    .split(/(?=[A-Z])|\s+/)
+    .join(' ');
+
+  // Convert to Title Case
+  return str.replace(/\b\w/g, (txt) => txt.toUpperCase());
+}
+
+function toSnakeCase(str) {
+  return str.replace(/([a-z])([A-Z])/g, '$1_$2').replace(/\s+|-|\./g, '_').toLowerCase().replace(/^_+|_+$/g, '');
+}
 
 module.exports = {
   writeStringToFile,
   generateCurrentTimestamp,
   generateTypeMapping,
   getNextRailsConfig,
+  toCamelCase,
+  toPascalCase,
+  toSnakeCase,
+  toTitleCase,
 };

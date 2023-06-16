@@ -1,20 +1,21 @@
-export interface <%- modelName %> {
+export interface <%- pascalSingularModelName %> {
   id: <%- idType %>;<% options.forEach((option) => { 
     const [name, type] = option.split(':');
   -%>
+
   <%- name %>: <%- typeMapping[type].ts %>;<% }); -%>
   created_at: Date;
   updated_at: Date;
 }
 
-export interface <%- modelName %>Metadata {
+export interface <%- pascalSingularModelName %>Metadata {
   id: { label: string; };
   <% options.forEach((option) => { const [name, type] = option.split(':'); %><%- name %>: { label: string; inputType: string; }; <% }); -%>
   created_at: { label: string; };
   updated_at: { label: string; };
 }
 
-export const <%- singularModelName %>Metadata: <%- modelName %>Metadata = {
+export const <%- singularModelName %>Metadata: <%- pascalSingularModelName %>Metadata = {
   id: { label: 'ID' },<% options.forEach((option) => { const [name, type] = option.split(':');
      let inputType = 'text';
      switch (type) {
@@ -25,6 +26,9 @@ export const <%- singularModelName %>Metadata: <%- modelName %>Metadata = {
           inputType = 'date';
           break;
         case 'number':
+        case 'integer':
+        case 'float':
+        case 'decimal':
           inputType = 'number';
           break;
         case 'vector':

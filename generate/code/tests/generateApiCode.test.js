@@ -1,3 +1,4 @@
+const pluralize = require('pluralize');
 const {
   generateCreateControllerCode,
   generateUpdateControllerCode,
@@ -5,28 +6,30 @@ const {
   generateShowControllerCode,
   generateIndexControllerCode
 } = require('../generateApiCode');
+const { toPascalCase } = require('../../../utils');
 
 describe('generateCreateControllerCode', () => {
   it('should generate correct create controller code', async () => {
     const singularModelName = 'user';
-    const pluralModelName = 'users';
-    const capitalizedSingularModelName = 'User';
+    const pluralModelName = pluralize(singularModelName)
+    const pascalSingularModelName = toPascalCase(singularModelName);
     const result = await generateCreateControllerCode(singularModelName, pluralModelName);
 
     // Expect we import the types and getKnex
     expect(result).toContain(`import type { NextApiRequest, NextApiResponse } from 'next';`);
     expect(result).toContain(`import { getKnex } from '@/db';`);
-    expect(result).toContain(`import { ${capitalizedSingularModelName} } from '@/db/models/${singularModelName}';`);
+    expect(result).toContain(`import { ${pascalSingularModelName} } from '@/db/models/${singularModelName}';`);
+
 
     // Expect we define the ResponseType
-    expect(result).toContain(`type ResponseType = ${capitalizedSingularModelName} | { message: string };`);
+    expect(result).toContain(`type ResponseType = ${pascalSingularModelName} | { message: string };`);
 
     // Expect we create a new instance of the model
-    expect(result).toContain(`const new${capitalizedSingularModelName}: ${capitalizedSingularModelName} = req.body;`);
+    expect(result).toContain(`const new${pascalSingularModelName}: ${pascalSingularModelName} = req.body;`);
 
     // Expect we use knex to insert the new instance into the database
     expect(result).toContain(
-      `const [inserted${capitalizedSingularModelName}] = await knex('${pluralModelName}').insert(new${capitalizedSingularModelName}).returning('*');`
+      `const [inserted${pascalSingularModelName}] = await knex('${pluralModelName}').insert(new${pascalSingularModelName}).returning('*');`
     );
   });
 });
@@ -34,27 +37,27 @@ describe('generateCreateControllerCode', () => {
 describe('generateUpdateControllerCode', () => {
   it('should generate correct update controller code', async () => {
     const singularModelName = 'user';
-    const pluralModelName = 'users';
-    const capitalizedSingularModelName = 'User';
+    const pluralModelName = pluralize(singularModelName)
+    const pascalSingularModelName = toPascalCase(singularModelName);
     const result = await generateUpdateControllerCode(singularModelName, pluralModelName);
 
     // Expect we import the types and getKnex
     expect(result).toContain(`import type { NextApiRequest, NextApiResponse } from 'next';`);
     expect(result).toContain(`import { getKnex } from '@/db';`);
-    expect(result).toContain(`import { ${capitalizedSingularModelName} } from '@/db/models/${singularModelName}';`);
+    expect(result).toContain(`import { ${pascalSingularModelName} } from '@/db/models/${singularModelName}';`);
 
     // Expect we define the ResponseType
-    expect(result).toContain(`type ResponseType = ${capitalizedSingularModelName} | { message: string };`);
+    expect(result).toContain(`type ResponseType = ${pascalSingularModelName} | { message: string };`);
 
     // Expect we create a new instance of the model
-    expect(result).toContain(`const updated${capitalizedSingularModelName}: ${capitalizedSingularModelName} = req.body;`);
+    expect(result).toContain(`const updated${pascalSingularModelName}: ${pascalSingularModelName} = req.body;`);
 
     // Expect we retrieve the ID from the request query
     expect(result).toContain(`const id = req.query.id;`);
 
     // Expect we use knex to update the instance in the database
     expect(result).toContain(
-      `const [updatedEntry] = await knex('${pluralModelName}').where('id', id).update(updated${capitalizedSingularModelName}).returning('*');`
+      `const [updatedEntry] = await knex('${pluralModelName}').where('id', id).update(updated${pascalSingularModelName}).returning('*');`
     );
 
     // Expect we handle possible errors
@@ -65,7 +68,7 @@ describe('generateUpdateControllerCode', () => {
 describe('generateDestroyControllerCode', () => {
   it('should generate correct destroy controller code', async () => {
     const singularModelName = 'user';
-    const pluralModelName = 'users';
+    const pluralModelName = pluralize(singularModelName)
     const result = await generateDestroyControllerCode(singularModelName, pluralModelName);
 
     // Expect we import the types and getKnex
@@ -92,17 +95,17 @@ describe('generateDestroyControllerCode', () => {
 describe('generateShowControllerCode', () => {
   it('should generate correct show controller code', async () => {
     const singularModelName = 'user';
-    const pluralModelName = 'users';
-    const capitalizedSingularModelName = 'User';
+    const pluralModelName = pluralize(singularModelName)
+    const pascalSingularModelName = toPascalCase(singularModelName);
     const result = await generateShowControllerCode(singularModelName, pluralModelName);
 
     // Expect we import the types and getKnex
     expect(result).toContain(`import type { NextApiRequest, NextApiResponse } from 'next';`);
     expect(result).toContain(`import { getKnex } from '@/db';`);
-    expect(result).toContain(`import { ${capitalizedSingularModelName} } from '@/db/models/${singularModelName}';`);
+    expect(result).toContain(`import { ${pascalSingularModelName} } from '@/db/models/${singularModelName}';`);
 
     // Expect we define the ResponseType
-    expect(result).toContain(`type ResponseType = ${capitalizedSingularModelName} | { message: string };`);
+    expect(result).toContain(`type ResponseType = ${pascalSingularModelName} | { message: string };`);
 
     // Expect we check for GET method
     expect(result).toContain(`if (req.method !== 'GET')`);
@@ -124,17 +127,17 @@ describe('generateShowControllerCode', () => {
 describe('generateIndexControllerCode', () => {
   it('should generate correct index controller code', async () => {
     const singularModelName = 'user';
-    const pluralModelName = 'users';
-    const capitalizedSingularModelName = 'User';
+    const pluralModelName = pluralize(singularModelName)
+    const pascalSingularModelName = toPascalCase(singularModelName);
     const result = await generateIndexControllerCode(singularModelName, pluralModelName);
 
     // Expect we import the types and getKnex
     expect(result).toContain(`import type { NextApiRequest, NextApiResponse } from 'next';`);
     expect(result).toContain(`import { getKnex } from '@/db';`);
-    expect(result).toContain(`import { ${capitalizedSingularModelName} } from '@/db/models/${singularModelName}';`);
+    expect(result).toContain(`import { ${pascalSingularModelName} } from '@/db/models/${singularModelName}';`);
 
     // Expect we define the ResponseType
-    expect(result).toContain(`type ResponseType = ${capitalizedSingularModelName}[] | { message: string };`);
+    expect(result).toContain(`type ResponseType = ${pascalSingularModelName}[] | { message: string };`);
 
     // Expect we check for GET method
     expect(result).toContain(`if (req.method !== 'GET')`);

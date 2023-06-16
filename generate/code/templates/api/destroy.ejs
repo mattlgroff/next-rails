@@ -20,10 +20,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     const deleteCount = await knex('<%= pluralModelName %>').where('id', id).del();
     // If delete is successful, we return a success message
     if (deleteCount > 0) {
-      return res.status(200).json({ success: true, message: `<%= capitalizedSingularModelName %> with id ${id} deleted successfully` });
+      return res.status(200).json({ success: true, message: `<%= pascalSingularModelName %> with id ${id} deleted successfully` });
     } else {
       // If the <%= singularModelName %> with the given id doesn't exist, we return an error
-      return res.status(404).json({ success: false, message: `<%= capitalizedSingularModelName %> with id ${id} not found` });
+      return res.status(404).json({ success: false, message: `<%= pascalSingularModelName %> with id ${id} not found` });
     }
   } catch (error) {
     console.error(error);

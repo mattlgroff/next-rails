@@ -1,38 +1,38 @@
 import { GetServerSideProps } from "next";
-import { <%= modelName %>, <%= singularModelName %>Metadata as modelMetadata, <%= PascalSingularModelName %>Metadata } from "@/db/models/<%= singularModelName %>";
+import { <%= pascalSingularModelName %>, <%= camelCaseSingularModelName %>Metadata as modelMetadata, <%= pascalSingularModelName %>Metadata } from "@/db/models/<%= singularModelName %>";
 import Link from "next/link";
 import { getKnex } from "@/db";
 import { useRouter } from 'next/router';
 
-interface Show<%= PascalSingularModelName %>PageProps {
-  <%= singularModelName %>: <%= modelName %>;
+interface Show<%= pascalSingularModelName %>PageProps {
+  <%= camelCaseSingularModelName %>: <%= pascalSingularModelName %>;
 }
 
-const Show<%= PascalSingularModelName %>Page = ({ <%= singularModelName %> }: Show<%= PascalSingularModelName %>PageProps) => {
+const Show<%= pascalSingularModelName %>Page = ({ <%= camelCaseSingularModelName %> }: Show<%= pascalSingularModelName %>PageProps) => {
   const router = useRouter();
 
   // Confirm deletion, then make request to delete endpoint
   const handleDelete = async () => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this <%= singularModelName %>?');
+    const confirmDelete = window.confirm('Are you sure you want to delete this <%= pascalSingularModelName %>?');
     if (confirmDelete) {
       try {
-        const res = await fetch(`/api/<%= pluralModelName %>/destroy/${<%= singularModelName %>.id}`, { method: 'DELETE' });
+        const res = await fetch(`/api/<%= pluralModelName %>/destroy/${<%= camelCaseSingularModelName %>.id}`, { method: 'DELETE' });
         if (!res.ok) throw new Error('Delete failed');
-        alert('<%= modelName %> deleted successfully');
+        alert('<%= pascalSingularModelName %> deleted successfully');
         router.push('/<%= pluralModelName %>');
       } catch (error) {
-        alert('An error occurred while deleting the <%= singularModelName %>.');
+        alert('An error occurred while deleting the <%= pascalSingularModelName %>.');
       }
     }
   };
 
-  const fieldData = (Object.keys(modelMetadata) as Array<keyof <%= PascalSingularModelName %>Metadata>).map((field) => (
+  const fieldData = (Object.keys(modelMetadata) as Array<keyof <%= pascalSingularModelName %>Metadata>).map((field) => (
     <p key={field} className="my-5">
       <strong className="block font-medium mb-1">{modelMetadata[field].label}</strong>
-      {<%= singularModelName %>[field] !== null && typeof <%= singularModelName %>[field] !== 'undefined' 
-          ? typeof <%= singularModelName %>[field] === 'boolean'
-            ? <%= singularModelName %>[field] ? "Yes" : "No"
-            : String(<%= singularModelName %>[field])
+      {<%= camelCaseSingularModelName %>[field] !== null && typeof <%= camelCaseSingularModelName %>[field] !== 'undefined' 
+          ? typeof <%= camelCaseSingularModelName %>[field] === 'boolean'
+            ? <%= camelCaseSingularModelName %>[field] ? "Yes" : "No"
+            : String(<%= camelCaseSingularModelName %>[field])
           : ""}
     </p>
   ));
@@ -45,17 +45,17 @@ const Show<%= PascalSingularModelName %>Page = ({ <%= singularModelName %> }: Sh
             {fieldData}
           </div>
             
-          <Link href={`/<%= pluralModelName %>/${<%= singularModelName %>.id}/edit`} className="mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium">
-            Edit this <%= singularModelName %>
+          <Link href={`/<%= pluralModelName %>/${<%= camelCaseSingularModelName %>.id}/edit`} className="mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium">
+            Edit this <%= pascalSingularModelName %>
           </Link>
         
           <div className="inline-block ml-2">
             <button onClick={handleDelete} className="mt-2 rounded-lg py-3 px-5 bg-gray-100 font-medium">
-              Destroy this <%= singularModelName %>
+              Destroy this <%= pascalSingularModelName %>
             </button>
           </div>
           <Link href={`/<%= pluralModelName %>`} className="ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium">
-            Back to <%= pluralModelName %>
+            Back to <%= pascalPluralModelName %>
           </Link>
         </div>
       </div>
@@ -65,25 +65,25 @@ const Show<%= PascalSingularModelName %>Page = ({ <%= singularModelName %> }: Sh
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const knex = getKnex();
-  const <%= singularModelName %> = await knex('<%= pluralModelName %>').where('id', context.params?.id).first();
+  const <%= camelCaseSingularModelName %> = await knex('<%= pluralModelName %>').where('id', context.params?.id).first();
 
-  if (!<%= singularModelName %>) {
+  if (!<%= camelCaseSingularModelName %>) {
     return {
       notFound: true,
     };
   }
 
-  const serialized<%= modelName %> = {
-    ...<%= singularModelName %>,
-    created_at: <%= singularModelName %>.created_at?.toISOString(),
-    updated_at: <%= singularModelName %>.updated_at?.toISOString(),
+  const serialized<%= pascalSingularModelName %> = {
+    ...<%= camelCaseSingularModelName %>,
+    created_at: <%= camelCaseSingularModelName %>.created_at?.toISOString(),
+    updated_at: <%= camelCaseSingularModelName %>.updated_at?.toISOString(),
   };
 
   return {
     props: {
-      <%= singularModelName %>: serialized<%= modelName %>,
+      <%= camelCaseSingularModelName %>: serialized<%= pascalSingularModelName %>,
     },
   };
 };
 
-export default Show<%= PascalSingularModelName %>Page;
+export default Show<%= pascalSingularModelName %>Page;

@@ -1,14 +1,10 @@
 const ejs = require('ejs');
 const path = require('path');
-const { generateTypeMapping } = require('../../utils');
+const { generateTypeMapping, toCamelCase, toTitleCase, toPascalCase, toSnakeCase } = require('../../utils');
 
 function generateModelCode(singularModelName, options, dbType = 'pg', primaryKeyType = 'integer') {
-  // Helper function to convert snake_case to Title Case
-  function toTitleCase(str) {
-    return str.replace('_', ' ').replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-  }
-
-  const modelName = singularModelName.charAt(0).toUpperCase() + singularModelName.slice(1);
+  const pascalSingularModelName = toPascalCase(singularModelName);
+  const camelCaseSingularModelName = toCamelCase(singularModelName);
 
   const typeMapping = generateTypeMapping(dbType, primaryKeyType);
   const idType = typeMapping.references.ts;
@@ -18,15 +14,15 @@ function generateModelCode(singularModelName, options, dbType = 'pg', primaryKey
     const [name, type] = option.split(':');
 
     if (type === 'references' || type === 'belongs_to') {
-      return `${name}_id:${typeMapping.references.db_column}`;
+      return `${toSnakeCase(name)}_id:${primaryKeyType === 'uuid' ? 'string' : 'integer'}`;
     }
 
     return option;
   });
 
   const data = {
-    singularModelName,
-    modelName,
+    singularModelName: camelCaseSingularModelName,
+    pascalSingularModelName,
     options,
     typeMapping,
     toTitleCase,

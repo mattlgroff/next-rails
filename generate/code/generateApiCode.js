@@ -1,11 +1,12 @@
 const ejs = require('ejs');
 const path = require('path');
+const { toPascalCase } = require('../../utils');
 
 async function generateCreateControllerCode(singularModelName, pluralModelName) {
   const data = {
     singularModelName,
     pluralModelName,
-    capitalizedSingularModelName: singularModelName.charAt(0).toUpperCase() + singularModelName.slice(1),
+    pascalSingularModelName: toPascalCase(singularModelName),
   };
 
   return new Promise((resolve, reject) => {
@@ -25,7 +26,7 @@ async function generateUpdateControllerCode(singularModelName, pluralModelName) 
   const data = {
     singularModelName,
     pluralModelName,
-    capitalizedSingularModelName: singularModelName.charAt(0).toUpperCase() + singularModelName.slice(1),
+    pascalSingularModelName: toPascalCase(singularModelName),
   };
 
   return new Promise((resolve, reject) => {
@@ -45,7 +46,7 @@ async function generateDestroyControllerCode(singularModelName, pluralModelName)
   const data = {
     singularModelName,
     pluralModelName,
-    capitalizedSingularModelName: singularModelName.charAt(0).toUpperCase() + singularModelName.slice(1),
+    pascalSingularModelName: toPascalCase(singularModelName),
   };
 
   return new Promise((resolve, reject) => {
@@ -65,7 +66,7 @@ async function generateShowControllerCode(singularModelName, pluralModelName) {
   const data = {
     singularModelName,
     pluralModelName,
-    capitalizedSingularModelName: singularModelName.charAt(0).toUpperCase() + singularModelName.slice(1),
+    pascalSingularModelName: toPascalCase(singularModelName),
   };
 
   return new Promise((resolve, reject) => {
@@ -85,7 +86,7 @@ async function generateIndexControllerCode(singularModelName, pluralModelName) {
   const data = {
     singularModelName,
     pluralModelName,
-    capitalizedSingularModelName: singularModelName.charAt(0).toUpperCase() + singularModelName.slice(1),
+    pascalSingularModelName: toPascalCase(singularModelName),
   };
 
   return new Promise((resolve, reject) => {

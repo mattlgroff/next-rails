@@ -122,7 +122,7 @@ Executes the same operations as the model command described above, and additiona
 * DELETE /api/plural-model-name/destroy/:id - Deletes a record.
 
 2) A Knex.js migration script in the src/db/migrations directory. This script includes functions to create and drop a database table representing the model. The table will include columns for each field in the model interface, as well as columns for createdAt and updatedAt.
-Note that for the model name, the singular form should be provided (ex: "Post" or "Todo"), and the scaffold generator will use a plural form where appropriate. For example, if you generate a scaffold for 'post', the model will be named 'Post', the API controller will be at pages/api/posts.ts, and the migration script will create a table named 'posts'. 
+Note that for the model name, the singular form should be provided (ex: "Post" or "TodoUser"), and the scaffold generator will use a plural form where appropriate. For example, if you generate a scaffold for 'post', the model will be named 'Post', the API controller will be at pages/api/posts.ts, and the migration script will create a table named 'posts'. 
 
 3) Pages for the model in the pages directory. The following pages will be created: 
 * /plural-model-name/index.tsx - A page that lists all records. (Index) ✅

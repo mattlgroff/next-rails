@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getKnex } from '@/db';
-import { <%= capitalizedSingularModelName %> } from '@/db/models/<%= singularModelName %>';
+import { <%= pascalSingularModelName %> } from '@/db/models/<%= singularModelName %>';
 
 const knex = getKnex();
 
-type ResponseType = <%= capitalizedSingularModelName %> | { message: string };
+type ResponseType = <%= pascalSingularModelName %> | { message: string };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType>) {
   // Check if request method is PUT
@@ -17,17 +17,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return res.status(400).json({ message: 'Missing ID' });
   }
 
-  const updated<%= capitalizedSingularModelName %>: <%= capitalizedSingularModelName %> = req.body;
-  updated<%= capitalizedSingularModelName %>['updated_at'] = new Date();
+  const updated<%= pascalSingularModelName %>: <%= pascalSingularModelName %> = req.body;
+  updated<%= pascalSingularModelName %>['updated_at'] = new Date();
 
   try {
-    const [updatedEntry] = await knex('<%= pluralModelName %>').where('id', id).update(updated<%= capitalizedSingularModelName %>).returning('*');
+    const [updatedEntry] = await knex('<%= pluralModelName %>').where('id', id).update(updated<%= pascalSingularModelName %>).returning('*');
     // If update is successful, we return the updated record
     if (updatedEntry) {
       return res.status(200).json(updatedEntry);
     } else {
       // If the record with the given id doesn't exist, we return an error
-      return res.status(404).json({ message: `<%= capitalizedSingularModelName %> with id ${id} not found` });
+      return res.status(404).json({ message: `<%= pascalSingularModelName %> with id ${id} not found` });
     }
   } catch (error) {
     console.error(error);

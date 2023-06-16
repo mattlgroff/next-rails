@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getKnex } from '@/db';
-import { <%= capitalizedSingularModelName %> } from '@/db/models/<%= singularModelName %>';
+import { <%= pascalSingularModelName %> } from '@/db/models/<%= singularModelName %>';
 
 const knex = getKnex();
 
-type ResponseType = <%= capitalizedSingularModelName %> | { message: string };
+type ResponseType = <%= pascalSingularModelName %> | { message: string };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType>) {
   // Check if request method is POST
@@ -12,13 +12,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return res.status(405).json({ message: 'Method not allowed. Use POST.' });
   }
 
-  const new<%= capitalizedSingularModelName %>: <%= capitalizedSingularModelName %> = req.body;
+  const new<%= pascalSingularModelName %>: <%= pascalSingularModelName %> = req.body;
 
   try {
-    const [inserted<%= capitalizedSingularModelName %>] = await knex('<%= pluralModelName %>').insert(new<%= capitalizedSingularModelName %>).returning('*');
+    const [inserted<%= pascalSingularModelName %>] = await knex('<%= pluralModelName %>').insert(new<%= pascalSingularModelName %>).returning('*');
 
     // Everything went well
-    return res.status(201).json(inserted<%= capitalizedSingularModelName %>);
+    return res.status(201).json(inserted<%= pascalSingularModelName %>);
   } catch (error) {
     console.error(error);
 
