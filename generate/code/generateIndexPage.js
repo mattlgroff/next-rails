@@ -1,15 +1,13 @@
 const ejs = require('ejs');
 const path = require('path');
-const { generateTypeMapping } = require('../../utils');
+const pluralize = require('pluralize');
+const { generateTypeMapping, toPascalCase, toTitleCase, toCamelCase, toSnakeCase } = require('../../utils');
 
 function generateIndexPage(singularModelName, pluralModelName, options, dbType = 'pg', primaryKeyType = 'integer') {
-  const modelName = singularModelName.charAt(0).toUpperCase() + singularModelName.slice(1);
-  const PascalPluralModelName = pluralModelName.charAt(0).toUpperCase() + pluralModelName.slice(1);
-
-  // Helper function to convert snake_case to Title Case
-  function toTitleCase(str) {
-    return str.replace('_', ' ').replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-  }
+  const pascalSingularModelName = toPascalCase(singularModelName);
+  const pascalPluralModelName = pluralize(pascalSingularModelName);
+  const camelCaseSingularModelName = toCamelCase(singularModelName);
+  const camelCasePluralModelName = toCamelCase(pluralModelName);
 
   // Construct the model metadata
   const modelMetadata = {
@@ -23,7 +21,7 @@ function generateIndexPage(singularModelName, pluralModelName, options, dbType =
     const [name, type] = option.split(':');
 
     if (type === 'references' || type === 'belongs_to') {
-      return `${name}_id:${typeMapping.references.db_column}`;
+      return `${toSnakeCase(name)}_id:${typeMapping.references.db_column}`;
     }
 
     return option;
@@ -45,7 +43,17 @@ function generateIndexPage(singularModelName, pluralModelName, options, dbType =
   return new Promise((resolve, reject) => {
     ejs.renderFile(
       path.resolve(__dirname, './templates/indexPage.ejs'),
-      { singularModelName, pluralModelName, modelName, PascalPluralModelName, fields, modelMetadata },
+      {
+        singularModelName,
+        pluralModelName,
+        camelCaseSingularModelName,
+        camelCasePluralModelName,
+        tableName: pluralModelName,
+        pascalSingularModelName,
+        pascalPluralModelName,
+        fields,
+        modelMetadata,
+      },
       {},
       function (err, str) {
         if (err) reject(err);

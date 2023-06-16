@@ -1,26 +1,26 @@
 import fs from 'fs';
 import path from 'path';
 import { GetServerSideProps } from "next";
-import { <%= modelName %>, <%= singularModelName %>Metadata as modelMetadata } from "@/db/models/<%= singularModelName %>";
+import { <%= pascalSingularModelName %>, <%= camelCaseSingularModelName %>Metadata as modelMetadata } from "@/db/models/<%= singularModelName %>";
 import Link from "next/link";
 import { getKnex } from "@/db";
 
-interface <%= PascalPluralModelName %>PageProps {
-  <%= pluralModelName %>: <%= modelName %>[];
+interface <%= pascalPluralModelName %>PageProps {
+  <%= camelCasePluralModelName %>: <%= pascalSingularModelName %>[];
   tables: Record<string, string>;
 }
 
-const <%= PascalPluralModelName %>Page = ({ <%= pluralModelName %>, tables }: <%= PascalPluralModelName %>PageProps) => {
-  const fieldData = <%= pluralModelName %>.map(<%= singularModelName %> => (
-    <tr key={<%= singularModelName %>.id}>
+const <%= pascalPluralModelName %>Page = ({ <%= camelCasePluralModelName %>, tables }: <%= pascalPluralModelName %>PageProps) => {
+  const fieldData = <%= camelCasePluralModelName %>.map(<%= camelCaseSingularModelName %> => (
+    <tr key={<%= camelCaseSingularModelName %>.id}>
       <% fields.forEach(field => { %>
         <td className="whitespace-nowrap px-3 py-4 text-sm font-medium text-gray-900">
           { modelMetadata['<%= field %>'].label === 'ID'
-            ? <Link className="text-blue-500" href={`/<%= pluralModelName %>/${<%= singularModelName %>.id}`}>{<%= singularModelName %>.<%= field %> !== null && typeof <%= singularModelName %>.<%= field %> !== 'undefined' ? String(<%= singularModelName %>.<%= field %>) : ""}</Link>
-            : <%= singularModelName %>.<%= field %> !== null && typeof <%= singularModelName %>.<%= field %> !== 'undefined' 
-              ? typeof <%= singularModelName %>.<%= field %> === 'boolean'
-                ? <%= singularModelName %>.<%= field %> ? "Yes" : "No"
-                : String(<%= singularModelName %>.<%= field %>)
+            ? <Link className="text-blue-500" href={`/<%= pluralModelName %>/${<%= camelCaseSingularModelName %>.id}`}>{<%= camelCaseSingularModelName %>.<%= field %> !== null && typeof <%= camelCaseSingularModelName %>.<%= field %> !== 'undefined' ? String(<%= camelCaseSingularModelName %>.<%= field %>) : ""}</Link>
+            : <%= camelCaseSingularModelName %>.<%= field %> !== null && typeof <%= camelCaseSingularModelName %>.<%= field %> !== 'undefined' 
+              ? typeof <%= camelCaseSingularModelName %>.<%= field %> === 'boolean'
+                ? <%= camelCaseSingularModelName %>.<%= field %> ? "Yes" : "No"
+                : String(<%= camelCaseSingularModelName %>.<%= field %>)
               : ""
           }
         </td>
@@ -43,8 +43,8 @@ const <%= PascalPluralModelName %>Page = ({ <%= pluralModelName %>, tables }: <%
       <main className="container mx-auto px-5 flex min-h-screen">
         <div className="w-full">
           <div className="flex justify-between items-center">
-            <h1 className="font-bold text-4xl"><%= PascalPluralModelName %></h1>
-            <Link href="/<%= pluralModelName %>/new" className="rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium">New <%= singularModelName %></Link>
+            <h1 className="font-bold text-4xl"><%= pascalPluralModelName %></h1>
+            <Link href="/<%= pluralModelName %>/new" className="rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium">New <%= pascalSingularModelName %></Link>
           </div>
         
           <div id="<%= pluralModelName %>" className="min-w-full">
@@ -72,11 +72,11 @@ const <%= PascalPluralModelName %>Page = ({ <%= pluralModelName %>, tables }: <%
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
     const knex = getKnex();
-    const <%= pluralModelName %>FromKnex = await knex("<%= singularModelName %>s");
-    const <%= pluralModelName %> = <%= pluralModelName %>FromKnex.map((<%= singularModelName %>: <%= modelName %>) => ({
-      ...<%= singularModelName %>,
-      created_at: <%= singularModelName %>.created_at?.toISOString(),
-      updated_at: <%= singularModelName %>.updated_at?.toISOString(),
+    const <%= camelCasePluralModelName %>FromKnex = await knex("<%= tableName %>");
+    const <%= camelCasePluralModelName %> = <%= camelCasePluralModelName %>FromKnex.map((<%= camelCaseSingularModelName %>: <%= pascalSingularModelName %>) => ({
+      ...<%= camelCaseSingularModelName %>,
+      created_at: <%= camelCaseSingularModelName %>.created_at?.toISOString(),
+      updated_at: <%= camelCaseSingularModelName %>.updated_at?.toISOString(),
     }));
 
     const filePath = path.join(process.cwd(), 'src/db/schema.json');
@@ -85,7 +85,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
     return {
       props: {
-        <%= pluralModelName %>,
+        <%= camelCasePluralModelName %>,
         tables,
       },
     };
@@ -93,11 +93,11 @@ export const getServerSideProps: GetServerSideProps = async () => {
     console.error(error);
     return {
       props: {
-        <%= pluralModelName %>: [],
+        <%= camelCasePluralModelName %>: [],
         tables: {},
       },
     };
   }
 };
 
-export default <%= PascalPluralModelName %>Page;
+export default <%= pascalPluralModelName %>Page;

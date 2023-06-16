@@ -14,10 +14,10 @@ const {
 const generateShowPage = require('./code/generateShowPage');
 const generateNewPage = require('./code/generateNewPage');
 const generateEditPage = require('./code/generateEditPage');
-const { writeStringToFile, generateCurrentTimestamp, getNextRailsConfig } = require('../utils');
+const { writeStringToFile, generateCurrentTimestamp, getNextRailsConfig, toSnakeCase } = require('../utils');
 
 function generateModel(modelName, options) {
-  const singularModelName = modelName.toLowerCase();
+  const singularModelName = toSnakeCase(modelName);
 
   // Generate model (src/db/models/${singularModelName}.ts) - Has the Typescript interface for the model
   const modelPath = path.join(process.cwd(), 'src/db/models', `${singularModelName}.ts`);
@@ -35,7 +35,7 @@ function generateModel(modelName, options) {
 }
 
 function generateScaffold(modelName, options) {
-  const singularModelName = modelName.toLowerCase();
+  const singularModelName = toSnakeCase(modelName);
   const pluralModelName = pluralize(singularModelName); // Using the pluralize package to pluralize the model name
 
   // Get the dbType and primaryKeyType from next-rails.config.json

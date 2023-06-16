@@ -1,14 +1,14 @@
 import { GetServerSideProps } from "next";
-import { <%= PascalSingularModelName %>, <%= singularModelName %>Metadata as modelMetadata, <%= PascalSingularModelName %>Metadata } from "@/db/models/<%= singularModelName %>";
+import { <%= pascalSingularModelName %>, <%= camelCaseSingularModelName %>Metadata as modelMetadata, <%= pascalSingularModelName %>Metadata } from "@/db/models/<%= singularModelName %>";
 import Link from "next/link";
 import { useRouter } from 'next/router'
 import { getKnex } from '@/db';
 
-interface Edit<%= PascalSingularModelName %>PageProps {
-  <%= singularModelName %>: <%= PascalSingularModelName %>;
+interface Edit<%= pascalSingularModelName %>PageProps {
+  <%= camelCaseSingularModelName %>: <%= pascalSingularModelName %>;
 }
 
-const Edit<%= PascalSingularModelName %>Page = ({ <%= singularModelName %> }: Edit<%= PascalSingularModelName %>PageProps) => {
+const Edit<%= pascalSingularModelName %>Page = ({ <%= camelCaseSingularModelName %> }: Edit<%= pascalSingularModelName %>PageProps) => {
   const router = useRouter();
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -16,7 +16,7 @@ const Edit<%= PascalSingularModelName %>Page = ({ <%= singularModelName %> }: Ed
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries());
 
-    const response = await fetch('/api/<%= pluralModelName %>/update/' + <%= singularModelName %>.id, {
+    const response = await fetch('/api/<%= pluralModelName %>/update/' + <%= camelCaseSingularModelName %>.id, {
       method: 'PUT',
       body: JSON.stringify(data),
       headers: {
@@ -29,26 +29,26 @@ const Edit<%= PascalSingularModelName %>Page = ({ <%= singularModelName %> }: Ed
     } else {
       const error = await response.json();
       
-      alert(`There was a problem updating your <%= singularModelName %>. ${error.message}`);
+      alert(`There was a problem updating your <%= pascalSingularModelName  %>. ${error.message}`);
     }
   }
 
   return (
     <main className="container mx-auto mt-28 px-5 flex min-h-screen">
       <div className="mx-auto md:w-2/3 w-full">
-        <h1 className="font-bold text-4xl">Edit <%= singularModelName %></h1>
+        <h1 className="font-bold text-4xl">Edit <%= pascalSingularModelName  %></h1>
 
         <form onSubmit={onSubmit}>
           {
-            (Object.keys(modelMetadata) as Array<keyof <%= PascalSingularModelName %>Metadata>).map(key => {
+            (Object.keys(modelMetadata) as Array<keyof <%= pascalSingularModelName %>Metadata>).map(key => {
               if (key !== 'id' && key !== 'created_at' && key !== 'updated_at') {
                 return (
                   <div key={key} className="my-5">
                     <label className="block text-gray-700 font-bold mb-2">{modelMetadata[key].label}</label>
                     {modelMetadata[key].inputType === 'checkbox' ? (
-                      <input name={key} type={modelMetadata[key].inputType} checked={<%= singularModelName %>[key] as boolean} className="block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" />
+                      <input name={key} type={modelMetadata[key].inputType} checked={!!<%= camelCaseSingularModelName %>[key]} className="block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" />
                     ) : (
-                      <input name={key} type={modelMetadata[key].inputType} defaultValue={<%= singularModelName %>[key] as string} className="block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" />
+                      <input name={key} type={modelMetadata[key].inputType} defaultValue={<%= camelCaseSingularModelName %>[key] as string} className="block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" />
                     )}                
                   </div>
                 )
@@ -56,12 +56,12 @@ const Edit<%= PascalSingularModelName %>Page = ({ <%= singularModelName %> }: Ed
             })
           }
           <div className="inline">
-            <button type="submit" className="rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer">Update <%= singularModelName %></button>
+            <button type="submit" className="rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer">Update <%= pascalSingularModelName  %></button>
           </div>
         </form>
 
         <Link href="/<%= pluralModelName %>" className="ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium">
-          Back to <%= pluralModelName %>
+          Back to <%= pascalPluralModelName %>
         </Link>
       </div>
     </main>
@@ -70,25 +70,25 @@ const Edit<%= PascalSingularModelName %>Page = ({ <%= singularModelName %> }: Ed
 
 export const getServerSideProps: GetServerSideProps = async context => {
   const knex = getKnex();
-  const <%= singularModelName %> = await knex('<%= pluralModelName %>').where('id', context.params?.id).first();
+  const <%= camelCaseSingularModelName %> = await knex('<%= pluralModelName %>').where('id', context.params?.id).first();
 
-  if (!<%= singularModelName %>) {
+  if (!<%= camelCaseSingularModelName %>) {
       return {
           notFound: true,
       };
   }
 
-  const serialized<%= PascalSingularModelName %> = {
-      ...<%= singularModelName %>,
-      created_at: <%= singularModelName %>.created_at?.toISOString(),
-      updated_at: <%= singularModelName %>.updated_at?.toISOString(),
+  const serialized<%= pascalSingularModelName %> = {
+      ...<%= camelCaseSingularModelName %>,
+      created_at: <%= camelCaseSingularModelName %>.created_at?.toISOString(),
+      updated_at: <%= camelCaseSingularModelName %>.updated_at?.toISOString(),
   };
 
   return {
       props: {
-          <%= singularModelName %>: serialized<%= PascalSingularModelName %>,
+          <%= camelCaseSingularModelName %>: serialized<%= pascalSingularModelName %>,
       },
   };
 };
 
-export default Edit<%= PascalSingularModelName %>Page;
+export default Edit<%= pascalSingularModelName %>Page;

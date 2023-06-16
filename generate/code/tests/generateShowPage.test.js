@@ -1,4 +1,5 @@
 const generateShowPage = require('../generateShowPage');
+const pluralize = require('pluralize');
 
 // Remove extra whitespace and newlines from a string
 const formatString = (str) => {
@@ -9,7 +10,7 @@ const formatString = (str) => {
 describe.skip('generateShowPage', () => {
   it('should generate show page for Todo model', async () => {
     const singularModelName = 'todo';
-    const pluralModelName = 'todos';
+    const pluralModelName = pluralize(singularModelName);
     const options = ['title:string', 'is_completed:boolean'];
     const output = formatString(await generateShowPage(singularModelName, pluralModelName, options));
 
@@ -63,7 +64,7 @@ describe.skip('generateShowPage', () => {
 
   it('should generate show page for User model', async () => {
     const singularModelName = 'user';
-    const pluralModelName = 'users';
+    const pluralModelName = pluralize(singularModelName);
     const options = ['name:string', 'email:string', 'is_active:boolean'];
     const output = formatString(await generateShowPage(singularModelName, pluralModelName, options));
 

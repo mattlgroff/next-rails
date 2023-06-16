@@ -1,14 +1,23 @@
 const ejs = require('ejs');
 const path = require('path');
+const pluralize = require('pluralize');
+const { toCamelCase, toPascalCase } = require('../../utils');
 
 function generateShowPage(singularModelName, pluralModelName) {
-  const modelName = singularModelName.charAt(0).toUpperCase() + singularModelName.slice(1);
-  const PascalSingularModelName = singularModelName.charAt(0).toUpperCase() + singularModelName.slice(1);
+  const pascalSingularModelName = toPascalCase(singularModelName);
+  const pascalPluralModelName = pluralize(pascalSingularModelName);
+  const camelCaseSingularModelName = toCamelCase(singularModelName);
 
   return new Promise((resolve, reject) => {
     ejs.renderFile(
       path.resolve(__dirname, './templates/showPage.ejs'),
-      { singularModelName, pluralModelName, modelName, PascalSingularModelName },
+      {
+        singularModelName,
+        pluralModelName,
+        pascalSingularModelName,
+        camelCaseSingularModelName,
+        pascalPluralModelName,
+      },
       {},
       function (err, str) {
         if (err) reject(err);
