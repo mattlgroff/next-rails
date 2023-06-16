@@ -8,7 +8,7 @@ const initDependencies = (appPath, dbType = 'pg', primaryKeyType = 'integer') =>
 
   // Install knex and PostgreSQL driver packages. # TODO: Add support for other dbTypes
   const installCommand =
-    'npm install --save knex pg tailwindcss-animate class-variance-authority clsx tailwind-merge lucide-react';
+    'npm install --save knex objection pg tailwindcss-animate class-variance-authority clsx tailwind-merge lucide-react';
   execSync(installCommand, { cwd: appPath, stdio: 'inherit' });
 
   // Install Prettier, ESLint, Lint Staged, and Husky packages.

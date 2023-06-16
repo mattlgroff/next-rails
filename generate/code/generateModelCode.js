@@ -1,8 +1,10 @@
 const ejs = require('ejs');
 const path = require('path');
+const pluralize = require('pluralize');
 const { generateTypeMapping, toCamelCase, toTitleCase, toPascalCase, toSnakeCase } = require('../../utils');
 
 function generateModelCode(singularModelName, options, dbType = 'pg', primaryKeyType = 'integer') {
+  const pluralModelName = pluralize(singularModelName);
   const pascalSingularModelName = toPascalCase(singularModelName);
   const camelCaseSingularModelName = toCamelCase(singularModelName);
 
@@ -22,6 +24,7 @@ function generateModelCode(singularModelName, options, dbType = 'pg', primaryKey
 
   const data = {
     singularModelName: camelCaseSingularModelName,
+    pluralModelName,
     pascalSingularModelName,
     options,
     typeMapping,
