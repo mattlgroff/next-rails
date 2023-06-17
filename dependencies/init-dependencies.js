@@ -13,7 +13,7 @@ const initDependencies = (appPath, dbType = 'pg', primaryKeyType = 'integer') =>
 
   // Install Prettier, ESLint, Lint Staged, and Husky packages.
   const installDevCommand =
-    'npm install --save-dev prettier prettier-plugin-tailwindcss eslint-config-prettier eslint-plugin-prettier @types/pg @typescript-eslint/eslint-plugin next-rails knex-next-rails';
+    'npm install --save-dev tailwindcss postcss autoprefixer prettier prettier-plugin-tailwindcss eslint-config-prettier eslint-plugin-prettier @types/pg @typescript-eslint/eslint-plugin next-rails knex-next-rails';
   execSync(installDevCommand, { cwd: appPath, stdio: 'inherit' });
 
   // TODO: Add husky and lint-staged and configure them as well
@@ -59,6 +59,11 @@ const initDependencies = (appPath, dbType = 'pg', primaryKeyType = 'integer') =>
   const srcTailwindConfigPath = resolve(__dirname, './files-to-copy/tailwind.config.js');
   const destTailwindConfigPath = join(appPath, 'tailwind.config.js');
   copyFileSync(srcTailwindConfigPath, destTailwindConfigPath);
+
+  console.log('🎨 Copying over the post.css Config...');
+  const srcPostCssConfigPath = resolve(__dirname, './files-to-copy/postcss.config.js');
+  const destPostCssConfigPath = join(appPath, 'postcss.config.js');
+  copyFileSync(srcPostCssConfigPath, destPostCssConfigPath);
 
   console.log('🖌️ Copying over the globals.css default for TailwindCSS...');
   const srcGlobalsCssPath = resolve(__dirname, './files-to-copy/globals.css');

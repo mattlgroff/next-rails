@@ -25,6 +25,12 @@ function generateModel(modelName, options) {
   // Get the dbType and primaryKeyType from next-rails.config.json
   const { dbType, primaryKeyType } = getNextRailsConfig();
 
+  options.forEach(option => {
+    if (!option.includes(':')) {
+      throw new Error(`Invalid option ${option}. Options must be in the format <option>:<type>`);
+    }
+  });
+
   generateModelCode(singularModelName, options, dbType, primaryKeyType)
     .then((result) => {
       writeStringToFile(result, modelPath);
