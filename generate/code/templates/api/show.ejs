@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getKnex } from '@/db';
-import { <%= pascalSingularModelName %> } from '@/db/models/<%= singularModelName %>';
+import { getCachedDbInstanceIfExist } from '@/db';
+import <%= pascalSingularModelName %>Model, { <%= pascalSingularModelName %> } from '@/db/models/<%= singularModelName %>';
 
-const knex = getKnex();
+getCachedDbInstanceIfExist();
 
 type ResponseType = <%= pascalSingularModelName %> | { message: string };
 
@@ -18,15 +18,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   }
 
   try {
-    const <%= singularModelName %> = await knex('<%= pluralModelName %>').where('id', id).first();
+    const <%= camelCaseSingularModelName %> = await <%= pascalSingularModelName %>Model.query().findById(id);
 
     // If the <%= singularModelName %> with the given id doesn't exist, we return an error
-    if (!<%= singularModelName %>) {
+    if (!<%= camelCaseSingularModelName %>) {
       return res.status(404).json({ message: `<%= pascalSingularModelName %> with id ${id} not found` });
     }
 
     // Everything went well
-    return res.status(200).json(<%= singularModelName %>);
+    return res.status(200).json(<%= camelCaseSingularModelName %>);
   } catch (error) {
     console.error(error);
 

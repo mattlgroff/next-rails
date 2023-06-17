@@ -1,8 +1,8 @@
 import { GetServerSideProps } from "next";
-import { <%= pascalSingularModelName %>, <%= camelCaseSingularModelName %>Metadata as modelMetadata, <%= pascalSingularModelName %>Metadata } from "@/db/models/<%= singularModelName %>";
+import <%= pascalSingularModelName %>Model, { <%= pascalSingularModelName %>, <%= camelCaseSingularModelName %>Metadata as modelMetadata, <%= pascalSingularModelName %>Metadata } from "@/db/models/<%= singularModelName %>";
 import Link from "next/link";
+import { getCachedDbInstanceIfExist } from '@/db';
 import { useRouter } from 'next/router'
-import { getKnex } from '@/db';
 
 interface Edit<%= pascalSingularModelName %>PageProps {
   <%= camelCaseSingularModelName %>: <%= pascalSingularModelName %>;
@@ -69,13 +69,20 @@ const Edit<%= pascalSingularModelName %>Page = ({ <%= camelCaseSingularModelName
 };
 
 export const getServerSideProps: GetServerSideProps = async context => {
-  const knex = getKnex();
-  const <%= camelCaseSingularModelName %> = await knex('<%= pluralModelName %>').where('id', context.params?.id).first();
+  getCachedDbInstanceIfExist();
+
+  if (!context?.params?.id || typeof context.params.id !== 'string') {
+    return {
+        notFound: true,
+    };
+  }
+
+  const <%= camelCaseSingularModelName %> = await <%= pascalSingularModelName %>Model.query().findById(context.params.id);
 
   if (!<%= camelCaseSingularModelName %>) {
-      return {
-          notFound: true,
-      };
+    return {
+      notFound: true,
+    };
   }
 
   const serialized<%= pascalSingularModelName %> = {

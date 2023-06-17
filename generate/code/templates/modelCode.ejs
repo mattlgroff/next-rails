@@ -1,5 +1,8 @@
 import { Model } from "objection";
-
+<% relationships.forEach(({ relatedModel, relatedKey, primaryKey }) => { -%>
+import <%- relatedModel %> from './<%- toSnakeCase(relatedModel) %>';
+<% }); -%>
+  
 export interface <%- pascalSingularModelName %> {
   id: <%- idType %>;<% options.forEach((option) => { 
     const [name, type] = option.split(':');
@@ -59,6 +62,19 @@ class <%- pascalSingularModelName %>Model extends Model {
     static get tableName() {
         return '<%- pluralModelName %>';
     }
+
+    static relationMappings = () => ({
+      <% relationships.forEach(({ relatedModel, relatedKey, primaryKey }) => { -%>
+      <%- toCamelCase(relatedModel) %>: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: <%- relatedModel %>,
+        join: {
+          from: '<%- pluralModelName %>.<%- relatedKey %>',
+          to: '<%- pluralize(toSnakeCase(relatedModel)) %>.<%- primaryKey %>',
+        },
+      },
+      <% }); -%>
+    });
 }
 
 export default <%- pascalSingularModelName %>Model;

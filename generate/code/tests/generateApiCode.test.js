@@ -15,10 +15,10 @@ describe('generateCreateControllerCode', () => {
     const pascalSingularModelName = toPascalCase(singularModelName);
     const result = await generateCreateControllerCode(singularModelName, pluralModelName);
 
-    // Expect we import the types and getKnex
+    // Expect we import the types and getCachedDbInstanceIfExist
     expect(result).toContain(`import type { NextApiRequest, NextApiResponse } from 'next';`);
-    expect(result).toContain(`import { getKnex } from '@/db';`);
-    expect(result).toContain(`import { ${pascalSingularModelName} } from '@/db/models/${singularModelName}';`);
+    expect(result).toContain(`import { getCachedDbInstanceIfExist } from '@/db';`);
+    expect(result).toContain(`import ${pascalSingularModelName}Model, { ${pascalSingularModelName} } from '@/db/models/${singularModelName}';`);
 
 
     // Expect we define the ResponseType
@@ -27,9 +27,9 @@ describe('generateCreateControllerCode', () => {
     // Expect we create a new instance of the model
     expect(result).toContain(`const new${pascalSingularModelName}: ${pascalSingularModelName} = req.body;`);
 
-    // Expect we use knex to insert the new instance into the database
+    // Expect we use Objection to insert the new instance into the database
     expect(result).toContain(
-      `const [inserted${pascalSingularModelName}] = await knex('${pluralModelName}').insert(new${pascalSingularModelName}).returning('*');`
+      `const inserted${pascalSingularModelName} = await ${pascalSingularModelName}Model.query().insertAndFetch(new${pascalSingularModelName});`
     );
   });
 });
@@ -41,10 +41,10 @@ describe('generateUpdateControllerCode', () => {
     const pascalSingularModelName = toPascalCase(singularModelName);
     const result = await generateUpdateControllerCode(singularModelName, pluralModelName);
 
-    // Expect we import the types and getKnex
+    // Expect we import the types and getCachedDbInstanceIfExist
     expect(result).toContain(`import type { NextApiRequest, NextApiResponse } from 'next';`);
-    expect(result).toContain(`import { getKnex } from '@/db';`);
-    expect(result).toContain(`import { ${pascalSingularModelName} } from '@/db/models/${singularModelName}';`);
+    expect(result).toContain(`import { getCachedDbInstanceIfExist } from '@/db';`);
+    expect(result).toContain(`import ${pascalSingularModelName}Model, { ${pascalSingularModelName} } from '@/db/models/${singularModelName}';`);
 
     // Expect we define the ResponseType
     expect(result).toContain(`type ResponseType = ${pascalSingularModelName} | { message: string };`);
@@ -57,7 +57,7 @@ describe('generateUpdateControllerCode', () => {
 
     // Expect we use knex to update the instance in the database
     expect(result).toContain(
-      `const [updatedEntry] = await knex('${pluralModelName}').where('id', id).update(updated${pascalSingularModelName}).returning('*');`
+      `const updatedEntry = await ${pascalSingularModelName}Model.query().patchAndFetchById(id, updated${pascalSingularModelName});`
     );
 
     // Expect we handle possible errors
@@ -69,11 +69,12 @@ describe('generateDestroyControllerCode', () => {
   it('should generate correct destroy controller code', async () => {
     const singularModelName = 'user';
     const pluralModelName = pluralize(singularModelName)
+    const pascalSingularModelName = toPascalCase(singularModelName);
     const result = await generateDestroyControllerCode(singularModelName, pluralModelName);
 
-    // Expect we import the types and getKnex
+    // Expect we import the types and getCachedDbInstanceIfExist
     expect(result).toContain(`import type { NextApiRequest, NextApiResponse } from 'next';`);
-    expect(result).toContain(`import { getKnex } from '@/db';`);
+    expect(result).toContain(`import { getCachedDbInstanceIfExist } from '@/db';`);
 
     // Expect we define the ResponseType
     expect(result).toContain(`type ResponseType = { success: boolean, message: string };`);
@@ -85,7 +86,7 @@ describe('generateDestroyControllerCode', () => {
     expect(result).toContain(`const id = req.query.id;`);
 
     // Expect we use knex to delete the instance from the database
-    expect(result).toContain(`const deleteCount = await knex('${pluralModelName}').where('id', id).del();`);
+    expect(result).toContain(`await ${pascalSingularModelName}Model.query().deleteById(id);`);
 
     // Expect we handle possible errors
     expect(result).toContain(`return res.status(500).json({ success: false, message: 'An unexpected error occurred.' });`);
@@ -99,10 +100,10 @@ describe('generateShowControllerCode', () => {
     const pascalSingularModelName = toPascalCase(singularModelName);
     const result = await generateShowControllerCode(singularModelName, pluralModelName);
 
-    // Expect we import the types and getKnex
+    // Expect we import the types and getCachedDbInstanceIfExist
     expect(result).toContain(`import type { NextApiRequest, NextApiResponse } from 'next';`);
-    expect(result).toContain(`import { getKnex } from '@/db';`);
-    expect(result).toContain(`import { ${pascalSingularModelName} } from '@/db/models/${singularModelName}';`);
+    expect(result).toContain(`import { getCachedDbInstanceIfExist } from '@/db';`);
+    expect(result).toContain(`import ${pascalSingularModelName}Model, { ${pascalSingularModelName} } from '@/db/models/${singularModelName}';`);
 
     // Expect we define the ResponseType
     expect(result).toContain(`type ResponseType = ${pascalSingularModelName} | { message: string };`);
@@ -117,7 +118,7 @@ describe('generateShowControllerCode', () => {
     expect(result).toContain(`return res.status(400).json({ message: 'Missing ID' });`);
 
     // Expect we use knex to fetch the instance from the database
-    expect(result).toContain(`const ${singularModelName} = await knex('${pluralModelName}').where('id', id).first();`);
+    expect(result).toContain(`const ${singularModelName} = await ${pascalSingularModelName}Model.query().findById(id);`);
 
     // Expect we handle possible errors
     expect(result).toContain(`return res.status(500).json({ message: 'An unexpected error occurred.' });`);
@@ -131,10 +132,10 @@ describe('generateIndexControllerCode', () => {
     const pascalSingularModelName = toPascalCase(singularModelName);
     const result = await generateIndexControllerCode(singularModelName, pluralModelName);
 
-    // Expect we import the types and getKnex
+    // Expect we import the types and getCachedDbInstanceIfExist
     expect(result).toContain(`import type { NextApiRequest, NextApiResponse } from 'next';`);
-    expect(result).toContain(`import { getKnex } from '@/db';`);
-    expect(result).toContain(`import { ${pascalSingularModelName} } from '@/db/models/${singularModelName}';`);
+    expect(result).toContain(`import { getCachedDbInstanceIfExist } from '@/db';`);
+    expect(result).toContain(`import ${pascalSingularModelName}Model, { ${pascalSingularModelName} } from '@/db/models/${singularModelName}';`);
 
     // Expect we define the ResponseType
     expect(result).toContain(`type ResponseType = ${pascalSingularModelName}[] | { message: string };`);
@@ -143,7 +144,7 @@ describe('generateIndexControllerCode', () => {
     expect(result).toContain(`if (req.method !== 'GET')`);
 
     // Expect we use knex to fetch all instances from the database
-    expect(result).toContain(`const ${pluralModelName} = await knex('${pluralModelName}').select('*');`);
+    expect(result).toContain(`const ${pluralModelName} = await ${pascalSingularModelName}Model.query();`);
 
     // Expect we handle possible errors
     expect(result).toContain(`return res.status(500).json({ message: 'An unexpected error occurred.' });`);

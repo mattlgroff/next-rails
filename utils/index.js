@@ -112,9 +112,9 @@ function getNextRailsConfig() {
 }
 
 function toCamelCase(str) {
-  return str.replace(/([-_][a-z])/g, (group) =>
-    group.toUpperCase().replace('-', '').replace('_', '')
-  );
+  return str[0].toLowerCase() + str.slice(1).replace(/([-_\s.][a-z])/g, (group) =>
+    group.toUpperCase().replace('-', '').replace('_', '').replace(' ', '').replace('.', '')
+  ).replace(' ', '');
 }
 
 function toPascalCase(str) {

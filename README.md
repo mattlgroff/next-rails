@@ -13,7 +13,8 @@ A CLI for generating a Next.js app with Rails CLI-like features.
 - ESLint ✅
 - Tailwind CSS ✅
 - [Shadcn UI compatible out of the box](https://ui.shadcn.com/docs/components) ✅
-- Knex ✅
+- Knex for Migrations & Seeds ✅
+- Objection for ORM ✅
 - PostgreSQL w/ PgVector ✅
 - Prettier ✅
 - Dockerfile for Development ✅

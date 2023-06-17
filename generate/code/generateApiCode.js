@@ -1,6 +1,6 @@
 const ejs = require('ejs');
 const path = require('path');
-const { toPascalCase } = require('../../utils');
+const { toPascalCase, toCamelCase } = require('../../utils');
 
 async function generateCreateControllerCode(singularModelName, pluralModelName) {
   const data = {
@@ -27,6 +27,7 @@ async function generateUpdateControllerCode(singularModelName, pluralModelName) 
     singularModelName,
     pluralModelName,
     pascalSingularModelName: toPascalCase(singularModelName),
+    camelCaseSingularModelName: toCamelCase(singularModelName),
   };
 
   return new Promise((resolve, reject) => {
@@ -47,6 +48,7 @@ async function generateDestroyControllerCode(singularModelName, pluralModelName)
     singularModelName,
     pluralModelName,
     pascalSingularModelName: toPascalCase(singularModelName),
+    camelCaseSingularModelName: toCamelCase(singularModelName),
   };
 
   return new Promise((resolve, reject) => {
@@ -67,6 +69,7 @@ async function generateShowControllerCode(singularModelName, pluralModelName) {
     singularModelName,
     pluralModelName,
     pascalSingularModelName: toPascalCase(singularModelName),
+    camelCaseSingularModelName: toCamelCase(singularModelName),
   };
 
   return new Promise((resolve, reject) => {

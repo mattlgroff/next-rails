@@ -1,4 +1,4 @@
-const { generateCurrentTimestamp, toPascalCase, toSnakeCase, toTitleCase } = require('../index');
+const { generateCurrentTimestamp, toPascalCase, toSnakeCase, toTitleCase, toCamelCase } = require('../index');
 
 describe('generateCurrentTimestamp', () => {
   it('should generate a timestamp in the format YYYYMMDDHHMMSS', () => {
@@ -44,5 +44,14 @@ describe('toSnakeCase', () => {
     expect(toSnakeCase('multiple.words')).toEqual('multiple_words');
     expect(toSnakeCase('multiple_words')).toEqual('multiple_words');
     expect(toSnakeCase('_MultipleWords_')).toEqual('multiple_words');
+  });
+});
+
+describe('toCamelCase', () => {
+  it('should convert strings to camelCase', () => {
+    expect(toCamelCase('MultipleWords')).toEqual('multipleWords');
+    expect(toCamelCase('Resource')).toEqual('resource');
+    expect(toCamelCase('multipleWords')).toEqual('multipleWords');
+    expect(toCamelCase('multiple_words')).toEqual('multipleWords');
   });
 });

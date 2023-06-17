@@ -72,8 +72,9 @@ const <%= pascalPluralModelName %>Page = ({ <%= camelCasePluralModelName %>, tab
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
     getCachedDbInstanceIfExist();
-    const <%= camelCasePluralModelName %>FromKnex = await <%= pascalSingularModelName %>Model.query();
-    const <%= camelCasePluralModelName %> = <%= camelCasePluralModelName %>FromKnex.map((<%= camelCaseSingularModelName %>: <%= pascalSingularModelName %>) => ({
+    const <%= camelCasePluralModelName %>Results = await <%= pascalSingularModelName %>Model.query();
+    
+    const <%= camelCasePluralModelName %> = <%= camelCasePluralModelName %>Results.map((<%= camelCaseSingularModelName %>: <%= pascalSingularModelName %>) => ({
       ...<%= camelCaseSingularModelName %>,
       created_at: <%= camelCaseSingularModelName %>.created_at?.toISOString(),
       updated_at: <%= camelCaseSingularModelName %>.updated_at?.toISOString(),
