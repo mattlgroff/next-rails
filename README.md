@@ -37,7 +37,7 @@ npm install -g next-rails
 or use `npx` to run the CLI without installing it globally, which also ensures the latest version is used:
 
 ```bash
-npx next-rails
+npx next-rails@latest
 ```
 
 ## Usage

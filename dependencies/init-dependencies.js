@@ -70,6 +70,11 @@ const initDependencies = (appPath, dbType = 'pg', primaryKeyType = 'integer') =>
   const destGlobalsCssPath = join(appPath, 'src/styles/globals.css');
   copyFileSync(srcGlobalsCssPath, destGlobalsCssPath);
 
+  console.log('📋 Copying over the components.json for shadcn...');
+  const componentsPath = resolve(__dirname, './files-to-copy/components.json');
+  const destComponentsPath = join(appPath, 'components.json');
+  copyFileSync(componentsPath, destComponentsPath);
+
   console.log('📋 Copying over the utils.ts for shadcn...');
   const srcUtilsPath = resolve(__dirname, './files-to-copy/utils.ts');
 
